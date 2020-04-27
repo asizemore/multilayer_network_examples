@@ -1,6 +1,6 @@
 base_dir :=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-local_name = enm375_code
+local_name = ohbm_2020
 tag ?= ann-dev
 run_cmd ?= jupyter notebook
 
