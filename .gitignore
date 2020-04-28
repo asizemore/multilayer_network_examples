@@ -3,7 +3,9 @@
 data/*
 *.pse
 *.pdf
+*.svg
 
+d3-save-svg-gh-pages/*
 
 
 .config/

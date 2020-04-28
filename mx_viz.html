@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+
+#header h1 {
+  top: 10px;
+  left: 10px;
+  width: 800px;
+  position: absolute;
+}
+
+#svgdiv-mx {
+  float: left;
+  width: 550px;
+  height: 850px;
+  margin: 10px 20px 10px 20px;
+  border-style: solid;
+  border-color: #7cafde;
+  color: white;
+  mix-blend-mode: multiply;
+}
+
+#svg-mx {
+  align-items: center;
+  margin: auto;
+  position: relative;
+  display: block;
+  rotate:
+}
+
+#options {
+  float:left;
+  position: relative;
+  margin-left: 600px;
+}
+
+.inter-layer {
+  stroke: gray;
+  stroke-width: 0.5px;
+}
+
+.intra-layer {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+</style>
+
+
+<body>
+
+<div id="header">
+  <h1> Multilayer network </h1>
+</div>
+
+
+
+<div id="svgdiv-mx">
+  <svg width="500" height="800" id="svg-mx"></svg>
+</div>
+
+
+<div id="options" width=100 height=200>
+  Color nodes by:
+  <select id="color-dropdown" title="Node color">
+  <option value="name">Name</option>
+  </select>
+
+  <button type="button" id="mx-button">Save mx</button>
+
+  Rotate mx:
+  <button type="button" id="rotate-button">Rotate</button>
+
+
+
+</div>
+
+
+
+
+
+<!-- Load d3 and other helper scripts -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
+<script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script>
+
+
+
+<!-- begin javascript -->
+<script>
+
+
+// This file originally modified from https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
+var svgmx= d3.select("#svg-mx"),
+    widthmx = +svgmx.attr("width"),
+    heightmx = +svgmx.attr("height");
+
+
+svgmx.attr("class", "svg_class")
+
+
+d3.json("data/mx_slide12.json", function(error, graph) {
+  if (error) throw error;
+
+// Define necessary functions for nodes
+  var node_radius = 5;
+
+  var layer_padding = 10;
+
+  var nLayers = 3;
+
+
+  var y_scale = d3.scaleLinear()
+    .range([50, heightmx-50])
+
+  y_scale.domain(d3.extent(graph.nodes, function(d) {return d.y; }));
+
+  var x_scale = d3.scaleLinear()
+    .range([50, widthmx-50])
+
+  x_scale.domain(d3.extent(graph.nodes, function(d) {return d.x; }));
+
+  var node_colormap = d3.scaleOrdinal(d3.schemeCategory20b).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+
+  d3.select("#color-dropdown").text("first");
+
+  layer_data = Object.getOwnPropertyNames(graph.nodes[0])
+  d3.select("#color-dropdown").selectAll("option")
+    .data(layer_data)
+    .enter()
+      .append("option")
+        .attr("value", function(d) {return d})
+        .text(function(d) {return d});
+
+// functions and info for edges
+  function edge_line(d) {
+        const y1 = y_scale(graph.nodes.filter(function(n){return n.id == d.source;})[0].y);
+        const x1 = x_scale(graph.nodes.filter(function(n){return n.id == d.source;})[0].x);
+        const y2 = y_scale(graph.nodes.filter(function(n){return n.id == d.target;})[0].y);
+        const x2 = x_scale(graph.nodes.filter(function(n){return n.id == d.target;})[0].x);
+        return `M ${x1},${y1} L ${x2},${y2}`;
+      }
+
+  function edge_class(d) {
+    // Determine within layer or between layer edges
+    node_source_L2 = graph.nodes.filter(function(n){return n.id == d.source;})[0].L2
+    node_target_L2 = graph.nodes.filter(function(n){return n.id == d.target;})[0].L2
+
+    if (node_source_L2 == node_target_L2) {
+      edge_class_id = "intra-layer"
+    } else {
+      edge_class_id = "inter-layer"
+    }
+
+    return edge_class_id
+  }
+
+  var link = svgmx.append("g")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("path")
+      .attr("d", edge_line)
+      .attr("class", edge_class);
+
+
+
+
+  var node = svgmx.append("g")
+    .attr("class","nodes")
+    .selectAll("g")
+    .data(graph.nodes)
+    .enter().append("g")
+
+
+  node.append("circle")
+    .attr("r", 10)
+    .attr("cx", function(d) {return x_scale(d.x)})
+    .attr("cy", function(d) {return y_scale(d.y)})
+    .attr("fill", function(d) {return node_colormap(d.L2)})
+    .attr("class", "nodes")
+    .attr("stroke", "white")
+    .attr("stroke-width", 1)
+    .attr("id", function(d) {return d.id})
+    .style("isolation","isolate")
+
+
+// buttons!
+  d3.select('#mx-button').on('click', function() {
+    var config = {
+      filename: 'mx',
+    }
+    d3_save_svg.save(d3.select('#svg-mx').node(), config);
+  });
+
+  d3.select("#rotate-button").on("click", function() {
+    d3.select("#svg-mx")
+      .attr("transform", "rotate(90)");
+  })
+
+
+
+});
+
+
+</script>
