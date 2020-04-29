@@ -1,7 +1,6 @@
 FROM jupyter/datascience-notebook:latest
 
 RUN pip install plotly
-RUN pip install cufflinks
 RUN pip install networkx
 RUN pip install matplotlib-venn
 RUN pip install bctpy
