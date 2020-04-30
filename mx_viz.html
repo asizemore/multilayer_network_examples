@@ -23,32 +23,37 @@
 #svg-mx {
   align-items: center;
   margin: auto;
-  position: relative;
-  display: block;
+  position: absolute;
+  float: left;
 }
 
 #options {
-  float:left;
-  position: relative;
+  float: left;
   margin: auto;
-  display: block;
 
 }
 
 #svgdiv-sadj {
-  float: left;
+  position: absolute;
+  top: 50%;
+  margin-left: 650px;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+#svgs-div {
   margin: auto;
+  width: 100%;
   position: relative;
-  display: block;
-  align-items: center;
+  height: 900px;
 
 }
 
 
 .inter-layer {
   stroke: gray;
-  stroke-width: 0.5px;
-  mix-blend-mode: lighten;
+  stroke-width: 0.2px;
+  mix-blend-mode: color-dodge;
 }
 
 .intra-layer {
@@ -85,23 +90,25 @@ text {
 </style>
 
 
-<body bgcolor=#0e1921>
+<body bgcolor=#020409>
 
 <div id="header">
   <h1> Multilayer network </h1>
 </div>
 
 
-
-<div id="svgdiv-mx">
-  <svg width="600" height="800" id="svg-mx"></svg>
-</div>
-
-
+<div id="svgs-div">
+  <div id="svgdiv-mx">
+    <svg width="600" height="800" id="svg-mx"></svg>
+  </div>
 
 
-<div id="svgdiv-sadj">
-  <svg width="500" height="500" id="svg-sadj"></svg>
+
+
+  <div id="svgdiv-sadj">
+    <svg width="500" height="500" id="svg-sadj"></svg>
+  </div>
+
 </div>
 
 <div id="options" width=100 height=200>
@@ -112,6 +119,8 @@ text {
 
   <button type="button" id="mx-button">Save mx</button>
 
+    <button type="button" id="sadj-button">Save sadj</button>
+
   Rotate mx:
   <button type="button" id="rotate-button">Rotate</button>
 
@@ -121,7 +130,7 @@ text {
 
   Slider:
   <!-- Add a slider -->
-  <input type="range" name="y0 Slider" id="slider-y0" min="-20" max="0" value="-5">
+  <input type="range" name="y0 Slider" id="slider-y0" min="-30" max="0" value="-5">
 
 
 </div>
@@ -153,7 +162,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide10_test2.json", function(error, graph) {
+d3.json("data/mx_slide9.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -254,9 +263,17 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
 
   var node_radius = 6;
 
+  if (nLayers < 5) {
 
-  var y_scale = d3.scaleLinear()
-    .range([150, heightmx-150])
+    var y_scale = d3.scaleLinear()
+      .range([150 + 30*(5-nLayers), heightmx-150 - 30*(5-nLayers)])
+
+
+  } else {
+
+    var y_scale = d3.scaleLinear()
+      .range([150, heightmx-150])
+  }
 
   y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0); }));
 
@@ -266,7 +283,13 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
 
   x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0); }));
 
-  var node_colormap = d3.scaleOrdinal(d3.schemeDark2).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  var node_colors = ["#58c3be","#7dbf6d","#db7368", "#c5a750","#a688d5","#7dbf6d"];
+
+  if (nLayers < 5) {
+    var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  } else {
+    var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  }
 
   d3.select("#color-dropdown").text("first");
 
@@ -303,6 +326,23 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
 
     return edge_class_id
   }
+
+
+  // Draw!!
+
+  var boxes = svgmx.append("g")
+
+  // Can create an array of layers and then attach that data instead
+  // of using a for loop
+  for (i=0; i<nLayers; i++) {
+    boxes.append("path")
+      .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project))
+      .attr("class", "boxes")
+      .attr("id", `box${i}`)
+      .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+      .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+    }
+
 
   var link = svgmx.append("g")
     .selectAll("line")
@@ -360,6 +400,13 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
       filename: 'mx',
     }
     d3_save_svg.save(d3.select('#svg-mx').node(), config);
+  });
+
+  d3.select('#sadj-button').on('click', function() {
+    var config = {
+      filename: 'sadj',
+    }
+    d3_save_svg.save(d3.select('#svg-sadj').node(), config);
   });
 
   d3.select("#rotate-button").on("click", function() {
@@ -439,7 +486,7 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
     //
     // // Edge weight colormap
     //
-    var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([0, d3.extent(graph.links, function(d) {return d.weight})[1]]);
+    var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0]);
     console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
     //
     var svgsadj= d3.select("#svg-sadj"),
@@ -460,6 +507,16 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
     var rect_r = (widthsadj-20)/graph.nodes.length;
     console.log(widthsadj)
     console.log(rect_r)
+
+    // draw box for heatmap
+    svgsadj.append("rect")
+      .attr("x", 20)
+      .attr("y", 20)
+      .attr("height", heightsadj-40 + rect_r)
+      .attr("width", widthsadj-40+ rect_r)
+      .style("stroke", "white")
+      .style("stroke-width", 0.25)
+
 
 
 
@@ -492,22 +549,22 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
       .data(graph.nodes)
       .enter().append("line")
         .attr("x1", function(d) {return x_scale2(d.id)})
-        .attr("y1", 10)
+        .attr("y1", 5)
         .attr("x2", function(d) {return x_scale2(d.id)+rect_r})
-        .attr("y2", 10)
+        .attr("y2", 5)
         .style("stroke", function(d) {return node_colormap(d.L2)})
-        .style("stroke-width", 3)
+        .style("stroke-width", 8)
 
     var lines_upper = svgsadj.append("g")
       .selectAll("line")
       .data(graph.nodes)
       .enter().append("line")
-        .attr("x1", 10)
+        .attr("x1", 5)
         .attr("y1", function(d) {return y_scale2(d.id)})
-        .attr("x2", 10)
+        .attr("x2", 5)
         .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
         .style("stroke", function(d) {return node_colormap(d.L2)})
-        .style("stroke-width", 3)
+        .style("stroke-width", 8)
 
 
 

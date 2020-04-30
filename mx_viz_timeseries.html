@@ -42,7 +42,7 @@
 
 .inter-layer {
   stroke: gray;
-  stroke-width: 0.5px;
+  stroke-width: 0.2px;
   mix-blend-mode: lighten;
 }
 
@@ -89,7 +89,7 @@ text {
 
 
 <div id="svgdiv-mx">
-  <svg width="1800" height="600" id="svg-mx"></svg>
+  <svg width="2000" height="600" id="svg-mx"></svg>
 </div>
 
 
@@ -100,6 +100,8 @@ text {
   </select>
 
   <button type="button" id="mx-button">Save mx</button>
+
+  <button type="button" id="sadj-button">Save sadj</button>
 
   Rotate mx:
   <button type="button" id="rotate-button">Rotate</button>
@@ -144,7 +146,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide11_test.json", function(error, graph) {
+d3.json("data/mx_slide11.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -352,6 +354,14 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
     d3_save_svg.save(d3.select('#svg-mx').node(), config);
   });
 
+  d3.select('#sadj-button').on('click', function() {
+    var config = {
+      filename: 'sadj',
+    }
+    d3_save_svg.save(d3.select('#svg-sadj').node(), config);
+  });
+
+
   d3.select("#rotate-button").on("click", function() {
     d3.select("#svg-mx")
       .attr("transform", "rotate(90)");
@@ -432,7 +442,7 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
   //
   // // Edge weight colormap
   //
-  var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([0, d3.extent(graph.links, function(d) {return d.weight})[1]]);
+  var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0]);
   console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
   //
   var svgsadj= d3.select("#svg-sadj"),
@@ -453,6 +463,15 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
   var rect_r = (widthsadj-20)/graph.nodes.length;
   console.log(widthsadj)
   console.log(rect_r)
+
+  // draw box for heatmap
+  svgsadj.append("rect")
+    .attr("x", 20)
+    .attr("y", 20)
+    .attr("height", heightsadj-40 + rect_r)
+    .attr("width", widthsadj-40+ rect_r)
+    .style("stroke", "white")
+    .style("stroke-width", 0.25)
 
 
 
