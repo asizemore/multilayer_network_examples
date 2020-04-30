@@ -30,8 +30,20 @@
 #options {
   float:left;
   position: relative;
-  margin-left: 600px;
+  margin: auto;
+  display: block;
+
 }
+
+#svgdiv-sadj {
+  float: left;
+  margin: auto;
+  position: relative;
+  display: block;
+  align-items: center;
+
+}
+
 
 .inter-layer {
   stroke: gray;
@@ -86,6 +98,12 @@ text {
 </div>
 
 
+
+
+<div id="svgdiv-sadj">
+  <svg width="500" height="500" id="svg-sadj"></svg>
+</div>
+
 <div id="options" width=100 height=200>
   Color nodes by:
   <select id="color-dropdown" title="Node color">
@@ -106,11 +124,7 @@ text {
   <input type="range" name="y0 Slider" id="slider-y0" min="-20" max="0" value="-5">
 
 
-
-
-
 </div>
-
 
 
 
@@ -407,6 +421,95 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
     changex0(x_0, selectedValue, d_project)
 
   })
+
+
+
+
+  // Plotting the supra-adjacency matrix
+    //
+    function get_source_node(d) {
+      source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0];
+      return source_node
+    }
+
+    function get_target_node(d) {
+      target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0];
+      return target_node
+    }
+    //
+    // // Edge weight colormap
+    //
+    var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([0, d3.extent(graph.links, function(d) {return d.weight})[1]]);
+    console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
+    //
+    var svgsadj= d3.select("#svg-sadj"),
+        widthsadj = +svgsadj.attr("width"),
+        heightsadj = +svgsadj.attr("height");
+
+    svgsadj.attr("class", "svg_class")
+
+    var y_scale2 = d3.scaleLinear()
+      .range([20, heightsadj-20])
+
+    y_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }));
+
+    var x_scale2 = d3.scaleLinear()
+      .range([20, widthsadj-20]);
+    x_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }))
+
+    var rect_r = (widthsadj-20)/graph.nodes.length;
+    console.log(widthsadj)
+    console.log(rect_r)
+
+
+
+    var boxes_lower = svgsadj.append("g")
+      .selectAll("rect")
+      .data(graph.links)
+      .enter().append("rect")
+        .attr("x", function(d) {return x_scale2(get_source_node(d).id)})
+        .attr("y", function(d) {return y_scale2(get_target_node(d).id)})
+        .style("fill", function(d) {return edge_colormap(d.weight)})
+        .attr("height", rect_r)
+        .attr("width", rect_r)
+        .attr("class", "heatmap")
+
+    var boxes_upper = svgsadj.append("g")
+      .selectAll("rect")
+      .data(graph.links)
+      .enter().append("rect")
+        .attr("x", function(d) {return x_scale2(get_target_node(d).id)})
+        .attr("y", function(d) {return y_scale2(get_source_node(d).id)})
+        .style("fill", function(d) {return edge_colormap(d.weight)})
+        .attr("height", rect_r)
+        .attr("width", rect_r)
+        .attr("class", "heatmap")
+
+
+
+    var lines_lower = svgsadj.append("g")
+      .selectAll("line")
+      .data(graph.nodes)
+      .enter().append("line")
+        .attr("x1", function(d) {return x_scale2(d.id)})
+        .attr("y1", 10)
+        .attr("x2", function(d) {return x_scale2(d.id)+rect_r})
+        .attr("y2", 10)
+        .style("stroke", function(d) {return node_colormap(d.L2)})
+        .style("stroke-width", 3)
+
+    var lines_upper = svgsadj.append("g")
+      .selectAll("line")
+      .data(graph.nodes)
+      .enter().append("line")
+        .attr("x1", 10)
+        .attr("y1", function(d) {return y_scale2(d.id)})
+        .attr("x2", 10)
+        .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
+        .style("stroke", function(d) {return node_colormap(d.L2)})
+        .style("stroke-width", 3)
+
+
 
 
 
