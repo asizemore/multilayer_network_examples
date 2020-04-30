@@ -134,7 +134,13 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
 
 
   // need to know how many nodes in layer 1
-  var nNodes = 10
+  // Would be better to get the number of unique values in L1 ...
+  var nodes_in_L1 = d3.extent(graph.nodes, function(d) {return d.L1})
+  var nNodes = nodes_in_L1[1]+1;
+
+  // Get number of layers
+  // Would be better to get the number of unique values in L2.
+  var nLayers = d3.extent(graph.nodes, function(d) {return d.L2})[1]+1
 
   // Get coordinates of the first layer of nodes
   x_pos = [];
@@ -219,7 +225,7 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
 // Define necessary functions for nodes
 
 
-  var node_radius = 7;
+  var node_radius = 6;
 
 
   var y_scale = d3.scaleLinear()
@@ -309,7 +315,7 @@ d3.json("data/mx_slide11_test.json", function(error, graph) {
 
   var boxes = svgmx.append("g")
 
-  var nLayers = 10;
+
   for (i=0; i<nLayers; i++) {
     boxes.append("path")
       .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i))
