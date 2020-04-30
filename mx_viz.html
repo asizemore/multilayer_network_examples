@@ -8,6 +8,7 @@
   left: 10px;
   width: 800px;
   position: absolute;
+  color: white;
 }
 
 #svgdiv-mx {
@@ -15,8 +16,6 @@
   width: 550px;
   height: 850px;
   margin: 10px 20px 10px 20px;
-  border-style: solid;
-  border-color: #7cafde;
   color: white;
   mix-blend-mode: multiply;
 }
@@ -26,7 +25,6 @@
   margin: auto;
   position: relative;
   display: block;
-  rotate:
 }
 
 #options {
@@ -38,17 +36,44 @@
 .inter-layer {
   stroke: gray;
   stroke-width: 0.5px;
+  mix-blend-mode: lighten;
 }
 
 .intra-layer {
-  stroke: black;
+  stroke: gray;
   stroke-width: 1px;
+  mix-blend-mode: color-dodge;
+}
+
+.boxes {
+  fill-opacity: 0.1;
+  stroke-width: 3;
+  mix-blend-mode: lighten;
+  stroke-opacity: 0.5;
+}
+
+.nodes_circles {
+  stroke: none;
+}
+
+.nodes_strokes {
+  stroke: gray;
+  stroke-width: 1.5;
+  fill: none;
+  mix-blend-mode: lighten;
+}
+
+text {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: lighter;
+  color: white;
+  font-size: 21px;
 }
 
 </style>
 
 
-<body>
+<body bgcolor=#0e1921>
 
 <div id="header">
   <h1> Multilayer network </h1>
@@ -85,6 +110,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
 <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script>
 <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 
 
@@ -101,7 +129,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide9.json", function(error, graph) {
+d3.json("data/mx_slide10_test.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -117,63 +145,95 @@ d3.json("data/mx_slide9.json", function(error, graph) {
   }
 
   // Define the center of our box
+
   const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
   box_center=[arrAvg(x_pos), arrAvg(y_pos)]
 
   // find the max x or y distance from box_center to any point
   var diffs = [];
   for (i=0; i < nNodes; i++) {
-    diffs.push(box_center[0] - graph.nodes[i].x)
-    diffs.push(box_center[1] - graph.nodes[i].y)
+    diffs.push(Math.abs(box_center[0] - graph.nodes[i].x))
+    diffs.push(Math.abs(box_center[1] - graph.nodes[i].y))
   }
   box_radius = Math.max(...diffs)
 
+
   // Set the box buffer
-  var box_buffer = 10;
+  var box_buffer = 0.15;
 
   // Projection functions
 
-  function project_x(x_coord, alpha, l_v, l_h) {
-    x_proj = x_coord*Math.cos(2*Math.PI*(alpha/360)) // cos takes radians
-    console.log(x_proj)
+  function project_x(x_coord, y_coord, z_coord, d_project) {
+    // x_proj = x_coord*Math.cos(2*Math.PI*(alpha/360)) // cos takes radians
+    // first from python to 3d using OP
+    x_3d = y_coord;
+    z_3d = x_coord + d_project;
+    x_0 = 15;
+
+    // next project from 3d to 2d window
+    x_proj = x_0 + (x_3d-x_0)*(d_project/z_3d)
     return x_proj
   }
 
-  function project_y(y_coord, alpha, l_v, l_h) {
-    y_proj = y_coord*Math.sin(2*Math.PI*(alpha/360)) + l_v;
+  function project_y(x_coord, y_coord, z_coord, d_project) {
+    // y_proj = y_coord*Math.sin(2*Math.PI*(alpha/360)) + l_v;
+    // first from python to 3d using //
+    y_3d = z_coord;
+    z_3d = x_coord + d_project;
+    y_0 = -2;
+
+    // next project from 3d to 2d
+    y_proj = (-1)*(y_0 + (y_3d-y_0)*(d_project/z_3d))
+
     return y_proj
   }
 
-  var alpha = 10, l_v = 1, l_h = 0
+  var d_project = 1, l_v = 1
   // Define box path
-  function box_path(box_center, box_radius, box_buffer) {
+  function box_path(box_center, box_radius, box_buffer, layer) {
 
     // need to project, then scale the projection
-        const x1 = x_scale(project_x(box_center[0] - box_radius - box_buffer, alpha, l_v, l_h));
-        const y1 = y_scale(project_y(box_center[1] - box_radius - box_buffer, alpha, l_v, l_h)) ;
-        const x2 = x_scale(project_x(box_center[0] + box_radius + box_buffer, alpha, l_v, l_h));
-        const y2 = y_scale(project_y(box_center[1] + box_radius + box_buffer, alpha, l_v, l_h));
+        console.log(layer)
+        var z_value = graph.nodes.filter(function(n){return n.L2 == layer;})[0].z
+        console.log(graph.nodes.filter(function(n){return n.L2 == layer;})[0])
 
-        return `M ${x1},${y2} L ${x2},${y2} L ${x2} ${y1} L ${x1} ${y1} L ${x1} ${y2}`;
+        const x1p = x_scale(project_x(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
+        const y1p = y_scale(project_y(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
+        const x2p = x_scale(project_x(box_center[0] + box_radius + box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
+        const y2p = y_scale(project_y(box_center[0] + box_radius + box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
+        const x3p = x_scale(project_x(box_center[0] + box_radius + box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
+        const y3p = y_scale(project_y(box_center[0] + box_radius + box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
+        const x4p = x_scale(project_x(box_center[0] - box_radius - box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
+        const y4p = y_scale(project_y(box_center[0] - box_radius - box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
+        //
+        // const x1 = 2
+        // const x2 = 8
+        // const y1 = 10
+        // const y2=20
+
+        return `M ${x1p},${y1p} L ${x2p},${y2p} L ${x3p} ${y3p} L ${x4p} ${y4p} L ${x1p} ${y1p}`;
       }
 
 // Define necessary functions for nodes
 
 
-  var node_radius = 5;
+  var node_radius = 7;
 
 
   var y_scale = d3.scaleLinear()
-    .range([50, heightmx-50])
+    .range([150, heightmx-150])
 
-  y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.y, alpha, d.L2, l_h); }));
+  y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project); }));
 
+  console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project); }))
+  console.log(project_x(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, 3, d_project))
+  console.log(box_center)
   var x_scale = d3.scaleLinear()
-    .range([50, widthmx-50])
+    .range([80, widthmx-80])
 
-  x_scale.domain(d3.extent(graph.nodes, function(d) {return d.x; }));
+  x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project); }));
 
-  var node_colormap = d3.scaleOrdinal(d3.schemeCategory20b).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  var node_colormap = d3.scaleOrdinal(d3.schemeDark2).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
 
   d3.select("#color-dropdown").text("first");
 
@@ -189,10 +249,11 @@ d3.json("data/mx_slide9.json", function(error, graph) {
   function edge_line(d) {
         const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
         const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
-        const y1 = y_scale(project_y(source_node.y, alpha, source_node.L2, l_h));
-        const x1 = x_scale(project_x(source_node.x, alpha, source_node.L2, l_h));
-        const y2 = y_scale(project_y(target_node.y, alpha, target_node.L2, l_h));
-        const x2 = x_scale(project_x(target_node.x, alpha, target_node.L2, l_h));
+        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project));
+        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project));
+        const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project));
+        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project));
+        console.log(source_node.z)
         return `M ${x1},${y1} L ${x2},${y2}`;
       }
 
@@ -228,21 +289,32 @@ d3.json("data/mx_slide9.json", function(error, graph) {
 
 
   node.append("circle")
-    .attr("r", 10)
-    .attr("cx", function(d) {return x_scale(project_x(d.x, alpha, d.L2, l_h))})
-    .attr("cy", function(d) {return y_scale(project_y(d.y, alpha, d.L2, l_h))})
+    .attr("r", node_radius)
+    .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project))})
+    .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project))})
     .attr("fill", function(d) {return node_colormap(d.L2)})
-    .attr("class", "nodes")
-    .attr("stroke", "white")
-    .attr("stroke-width", 1)
+    .attr("class", "nodes_circles")
     .attr("id", function(d) {return d.id})
-    .style("isolation","isolate")
 
-  var boxes = svgmx.append("path")
-    .attr("d",box_path(box_center, box_radius, box_buffer))
-    .attr("stroke", "orange")
-    .attr("fill", "none")
-    .attr("stroke-width", 5)
+  node.append("circle")
+    .attr("r", node_radius)
+    .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project))})
+    .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project))})
+    .attr("class", "nodes_strokes")
+    .attr("id", function(d) {return d.id})
+
+
+
+  var boxes = svgmx.append("g")
+
+  var nLayers = 5;
+  for (i=0; i<nLayers; i++) {
+    boxes.append("path")
+      .attr("d",box_path(box_center, box_radius, box_buffer, i))
+      .attr("class", "boxes")
+      .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+      .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+    }
 
 
 // buttons!
