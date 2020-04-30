@@ -13,8 +13,6 @@
 
 #svgdiv-mx {
   float: left;
-  width: 550px;
-  height: 850px;
   margin: 10px 20px 10px 20px;
   color: white;
   mix-blend-mode: multiply;
@@ -48,7 +46,7 @@
 .boxes {
   fill-opacity: 0.1;
   stroke-width: 3;
-  mix-blend-mode: lighten;
+  mix-blend-mode: hard-light;
   stroke-opacity: 0.5;
 }
 
@@ -73,7 +71,7 @@ text {
 </style>
 
 
-<body bgcolor=#0e1921>
+<body bgcolor=#ffffff>
 
 <div id="header">
   <h1> Multilayer network </h1>
@@ -82,7 +80,7 @@ text {
 
 
 <div id="svgdiv-mx">
-  <svg width="600" height="800" id="svg-mx"></svg>
+  <svg width="1800" height="600" id="svg-mx"></svg>
 </div>
 
 
@@ -99,11 +97,11 @@ text {
 
   Slider:
   <!-- Add a slider -->
-  <input type="range" name="x0 Slider" id="slider-x0" min="0" max="18" value="10">
+  <input type="range" name="x0 Slider" id="slider-x0" min="-20" max="0" value="10">
 
   Slider:
   <!-- Add a slider -->
-  <input type="range" name="y0 Slider" id="slider-y0" min="-20" max="0" value="-5">
+  <input type="range" name="y0 Slider" id="slider-y0" min="-40" max="-0.1" value="-5">
 
 
 
@@ -139,7 +137,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide10_test2.json", function(error, graph) {
+d3.json("data/mx_slide11_test.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -190,8 +188,8 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
   function project_x(x_coord, y_coord, z_coord, d_project, x_0) {
     // x_proj = x_coord*Math.cos(2*Math.PI*(alpha/360)) // cos takes radians
     // first from python to 3d using OP
-    x_3d = y_coord;
-    z_3d = x_coord + d_project;
+    x_3d = z_coord;
+    z_3d = y_coord + d_project;
 
     // next project from 3d to 2d window
     x_proj = x_0 + (x_3d-x_0)*(d_project/z_3d)
@@ -201,8 +199,8 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
   function project_y(x_coord, y_coord, z_coord, d_project, y_0) {
     // y_proj = y_coord*Math.sin(2*Math.PI*(alpha/360)) + l_v;
     // first from python to 3d using //
-    y_3d = z_coord;
-    z_3d = x_coord + d_project;
+    y_3d = x_coord;
+    z_3d = y_coord + d_project;
 
     // next project from 3d to 2d
     y_proj = (-1)*(y_0 + (y_3d-y_0)*(d_project/z_3d))
@@ -252,7 +250,7 @@ d3.json("data/mx_slide10_test2.json", function(error, graph) {
 
   x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0); }));
 
-  var node_colormap = d3.scaleOrdinal(d3.schemeDark2).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  var node_colormap = d3.scaleSequential(d3.interpolateRdYlBu).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
 
   d3.select("#color-dropdown").text("first");
 
