@@ -129,12 +129,12 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide10_test.json", function(error, graph) {
+d3.json("data/mx_slide11_test.json", function(error, graph) {
   if (error) throw error;
 
 
   // need to know how many nodes in layer 1
-  var nNodes = 17
+  var nNodes = 10
 
   // Get coordinates of the first layer of nodes
   x_pos = [];
@@ -149,13 +149,15 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
   const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
   box_center=[arrAvg(x_pos), arrAvg(y_pos)]
 
-  // find the max x or y distance from box_center to any point
-  var diffs = [];
+  // find the max x and y distances from box_center to any point
+  var diffsx = [];
+  var diffsy = [];
   for (i=0; i < nNodes; i++) {
-    diffs.push(Math.abs(box_center[0] - graph.nodes[i].x))
-    diffs.push(Math.abs(box_center[1] - graph.nodes[i].y))
+    diffsx.push(Math.abs(box_center[0] - graph.nodes[i].x))
+    diffsy.push(Math.abs(box_center[1] - graph.nodes[i].y))
   }
-  box_radius = Math.max(...diffs)
+  box_radiusx = Math.max(...diffsx)
+  box_radiusy = Math.max(...diffsy)
 
 
   // Set the box buffer
@@ -168,7 +170,7 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
     // first from python to 3d using OP
     x_3d = y_coord;
     z_3d = x_coord + d_project;
-    x_0 = 15;
+    x_0 = 10;
 
     // next project from 3d to 2d window
     x_proj = x_0 + (x_3d-x_0)*(d_project/z_3d)
@@ -180,7 +182,7 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
     // first from python to 3d using //
     y_3d = z_coord;
     z_3d = x_coord + d_project;
-    y_0 = -2;
+    y_0 = -5;
 
     // next project from 3d to 2d
     y_proj = (-1)*(y_0 + (y_3d-y_0)*(d_project/z_3d))
@@ -190,21 +192,21 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
 
   var d_project = 1, l_v = 1
   // Define box path
-  function box_path(box_center, box_radius, box_buffer, layer) {
+  function box_path(box_center, box_radiusx, box_radiusy, box_buffer, layer) {
 
     // need to project, then scale the projection
         console.log(layer)
         var z_value = graph.nodes.filter(function(n){return n.L2 == layer;})[0].z
         console.log(graph.nodes.filter(function(n){return n.L2 == layer;})[0])
 
-        const x1p = x_scale(project_x(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
-        const y1p = y_scale(project_y(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
-        const x2p = x_scale(project_x(box_center[0] + box_radius + box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
-        const y2p = y_scale(project_y(box_center[0] + box_radius + box_buffer, box_center[1] + box_radius + box_buffer, z_value, d_project));
-        const x3p = x_scale(project_x(box_center[0] + box_radius + box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
-        const y3p = y_scale(project_y(box_center[0] + box_radius + box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
-        const x4p = x_scale(project_x(box_center[0] - box_radius - box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
-        const y4p = y_scale(project_y(box_center[0] - box_radius - box_buffer, box_center[1] - box_radius - box_buffer, z_value, d_project));
+        const x1p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project));
+        const y1p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project));
+        const x2p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project));
+        const y2p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project));
+        const x3p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project));
+        const y3p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project));
+        const x4p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project));
+        const y4p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project));
         //
         // const x1 = 2
         // const x2 = 8
@@ -226,7 +228,7 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
   y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project); }));
 
   console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project); }))
-  console.log(project_x(box_center[0] - box_radius - box_buffer, box_center[1] + box_radius + box_buffer, 3, d_project))
+  console.log(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, 3, d_project))
   console.log(box_center)
   var x_scale = d3.scaleLinear()
     .range([80, widthmx-80])
@@ -307,10 +309,10 @@ d3.json("data/mx_slide10_test.json", function(error, graph) {
 
   var boxes = svgmx.append("g")
 
-  var nLayers = 5;
+  var nLayers = 10;
   for (i=0; i<nLayers; i++) {
     boxes.append("path")
-      .attr("d",box_path(box_center, box_radius, box_buffer, i))
+      .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i))
       .attr("class", "boxes")
       .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
       .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
