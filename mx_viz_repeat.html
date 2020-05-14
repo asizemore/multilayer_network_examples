@@ -502,9 +502,13 @@ d3.json("data/mx_slide10.json", function(error, graph) {
     d3_save_svg.save(d3.select('#svg-sadj').node(), config);
   });
 
+
+  var angle = 0;
   d3.select("#rotate-button").on("click", function() {
+
+    angle += 90
     d3.select("#svg-mx")
-      .attr("transform", "rotate(90)");
+      .style("transform", "rotate(" + angle + "deg)");
   })
 
   // Slider functions
