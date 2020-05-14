@@ -1,0 +1,11 @@
+[user]
+	name = asizemore
+	email = annsize@seas.upenn.edu
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+
+[credential]
+	helper = "!f() { /home/jovyan/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node /tmp/vscode-remote-containers-d65de4f07fdd877c3f73b114314ab377e891d8bf.js $*; }; f"
