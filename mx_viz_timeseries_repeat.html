@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+  
+  #header {
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 95%;
+  height: 40px;
+  padding: 10px;
+  overflow: auto;
+  background: rgba(255,255,255,0.06);
+
+  }
+
   #header h1 {
-    top: 10px;
-    left: 10px;
-    width: 800px;
-    position: absolute;
+    margin: auto;
+    opacity: 1;
     color: white;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 300;
+    padding-left: 20px;
+
+  }
+
+  h2 {
+    color: white;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    margin-top: 5px;
+    margin-bottom: 30px;
+    font-weight: lighter;
   }
 
   #svgdiv-mx {
-    float: left;
+    /* float: left; */
     margin: 10px 20px 10px 20px;
     color: white;
+    isolation: isolate;
 
   }
 
@@ -23,19 +47,44 @@
     display: block;
   }
 
-  #options {
-    float: left;
-    position: relative;
+  #options-div {
+    margin: auto;
+    margin-bottom: 40px;
+    background: rgba(255,255,255,0.03);
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+    grid-auto-rows: 4fr;
+    grid-row-gap: 10px;
+    height: 450px;
+    width: 60%;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: lighter;
+
+  }
+
+  #options-div div {
     margin: auto;
   }
 
   #svgdiv-sadj {
-    float: left;
+    /* clear: both; */
+    /* float: left; */
     margin: auto;
+    width: 100%;
     position: relative;
-    display: block;
     align-items: center;
+    text-align: center;
 
+  }
+
+  #row2-div {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
+    grid-column-gap: 10px;
+    width: 95%;
+    height: 600px;
   }
 
   .inter-layer {
@@ -46,7 +95,7 @@
 
   .intra-layer {
     stroke: gray;
-    stroke-width: 1px;
+    stroke-width: 0.2px;
     mix-blend-mode: color-dodge;
   }
 
@@ -74,10 +123,22 @@
     color: white;
     font-size: 21px;
   }
+
+  #footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  width: 100%;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: lighter;
+  text-align: right;
+}
 </style>
 
 
-<body style="background-color:rgb(30, 54, 54)">
+<body style="background-color:rgb(1, 7, 9)">
 
   <div id="header">
     <h1> Multilayer network </h1>
@@ -86,36 +147,57 @@
 
 
   <div id="svgdiv-mx">
-    <svg width="1200" height="600" id="svg-mx"></svg>
+    <svg width="1400" height="500" id="svg-mx"></svg>
   </div>
 
 
-  <div id="options" width=100 height=200>
-    Color nodes by:
-    <select id="color-dropdown" title="Node color">
-      <option value="name">Name</option>
-    </select>
+  <div id="row2-div">
+
+
+    <div id="options-div" width=100 height=200>
+      
+      <div>
+        Color nodes by:
+        <select id="color-dropdown" title="Node color">
+          <option value="name">Name</option>
+        </select>
+      </div>
+
+
+      <div>
+        Rotate mx:
+        <button type="button" id="rotate-button">Rotate</button>
+      </div>
+
+
+      <div>
+        xylider:
+        <!-- Add a slider -->
+        <input type="range" name="y0 Slider" id="slider-y0" min="0" max="19" value="5">
+      </div>
+
+      <div>
+        Slider:
+        <input type="range" name="tilt Slider" id="slider-tilt" min="0" max="600" value="200">
+      </div>
+    
+
+    </div>
+  
+
+    <div id="svgdiv-sadj">
+      <h2>supra-adjacency matrix</h2>
+      <svg width="500" height="500" id="svg-sadj"></svg>
+    </div>
+
+  </div>
+
+  <div id="footer">
 
     <button type="button" id="mx-button">Save mx</button>
 
     <button type="button" id="sadj-button">Save sadj</button>
 
-    Rotate mx:
-    <button type="button" id="rotate-button">Rotate</button>
-
-    xSlider:
-    <!-- Add a slider -->
-    <input type="range" name="x0 Slider" id="slider-x0" min="-20" max="0" value="10">
-
-    ySlider:
-    <!-- Add a slider -->
-    <input type="range" name="y0 Slider" id="slider-y0" min="-40" max="-0.1" value="-5">
-
-
-  </div>
-
-  <div id="svgdiv-sadj">
-    <svg width="500" height="500" id="svg-sadj"></svg>
   </div>
 
 
@@ -143,7 +225,7 @@
     svgmx.attr("class", "svg_class")
 
 
-    d3.json("data/mx_slide12.json", function (error, graph) {
+    d3.json("data/mx_slide11.json", function (error, graph) {
       if (error) throw error;
 
 
@@ -187,21 +269,22 @@
 
       // Projection functions
       var x_0 = 10;
-      var y_0 = -5;
+      var y_0 = 5;
+      var tilt = 200;
 
 
-      function project_x(x_coord, y_coord, z_coord, d_project, x_0) {
+      function project_x(x_coord, y_coord, z_coord, d_project, x_0, tilt) {
         // x_proj = x_coord*Math.cos(2*Math.PI*(alpha/360)) // cos takes radians
         // first from python to 3d using OP
-        x_3d = z_coord;
+        x_3d = tilt;
         z_3d = y_coord + d_project;
 
         // next project from 3d to 2d window
-        x_proj = x_0 + (x_3d - x_0) * (d_project / z_3d)
+        x_proj = x_0 + (x_3d - x_0) * (d_project / z_3d) + z_coord
         return x_proj
       }
 
-      function project_y(x_coord, y_coord, z_coord, d_project, y_0) {
+      function project_y(x_coord, y_coord, z_coord, d_project, y_0, tilt) {
         // y_proj = y_coord*Math.sin(2*Math.PI*(alpha/360)) + l_v;
         // first from python to 3d using //
         y_3d = x_coord;
@@ -215,20 +298,20 @@
 
       var d_project = 1, l_v = 1
       // Define box path
-      function box_path(box_center, box_radiusx, box_radiusy, box_buffer, layer, x_0, y_0, d_project) {
+      function box_path(box_center, box_radiusx, box_radiusy, box_buffer, layer, x_0, y_0, d_project, tilt) {
 
         // need to project, then scale the projection
         var z_value = graph.nodes.filter(function (n) { return n.L2 == layer; })[0].z
 
 
-        const x1p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0));
-        const y1p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0));
-        const x2p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0));
-        const y2p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0));
-        const x3p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0));
-        const y3p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0));
-        const x4p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0));
-        const y4p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0));
+        const x1p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0, tilt));
+        const y1p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0, tilt));
+        const x2p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0, tilt));
+        const y2p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0, tilt));
+        const x3p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0, tilt));
+        const y3p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0, tilt));
+        const x4p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0, tilt));
+        const y4p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0, tilt));
         //
         // const x1 = 2
         // const x2 = 8
@@ -247,13 +330,13 @@
       var y_scale = d3.scaleLinear()
         .range([150, heightmx - 150])
 
-      y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0); }));
+      y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
 
 
       var x_scale = d3.scaleLinear()
         .range([150, widthmx - 150])
 
-      x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0); }));
+      x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
 
       var node_colormap = d3.scaleSequential(d3.interpolateRdYlBu).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
 
@@ -271,10 +354,10 @@
       function edge_line(d, x_0, y_0, d_project) {
         const source_node = graph.nodes.filter(function (n) { return n.id == d.source; })[0]
         const target_node = graph.nodes.filter(function (n) { return n.id == d.target; })[0]
-        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0));
-        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0));
-        const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0));
-        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0));
+        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
+        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+        const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
+        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
 
         return `M ${x1},${y1} L ${x2},${y2}`;
       }
@@ -297,7 +380,7 @@
         .selectAll("line")
         .data(graph.links)
         .enter().append("path")
-        .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project) })
+        .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project, tilt) })
         .attr("class", edge_class);
 
 
@@ -312,16 +395,16 @@
 
       node.append("circle")
         .attr("r", node_radius)
-        .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0)) })
-        .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0)) })
+        .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt)) })
+        .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt)) })
         .attr("fill", function (d) { return node_colormap(d.L2) })
         .attr("class", "nodes_circles")
         .attr("id", function (d) { return d.id })
 
       node.append("circle")
         .attr("r", node_radius)
-        .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0)) })
-        .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0)) })
+        .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt)) })
+        .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt)) })
         .attr("class", "nodes_strokes")
         .attr("id", function (d) { return d.id })
 
@@ -333,7 +416,7 @@
       // of using a for loop
       for (i = 0; i < nLayers; i++) {
         boxes.append("path")
-          .attr("d", box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project))
+          .attr("d", box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
           .attr("class", "boxes")
           .attr("id", `box${i}`)
           .attr("fill", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
@@ -372,31 +455,31 @@
         console.log(x_0)
         console.log(y_0)
         // Need to recalculate the x_scale domain each time
-        x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0); }));
+        x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
 
         // And y scale
-        y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0); }));
+        y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
 
         // Recalculate node position
         d3.selectAll(".nodes_circles")
-          .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0)) })
-          .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0)) })
+          .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt)) })
+          .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt)) })
 
         d3.selectAll(".nodes_strokes")
-          .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0)) })
-          .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0)) })
+          .attr("cx", function (d) { return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt)) })
+          .attr("cy", function (d) { return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt)) })
 
         // Recalculate edge postitions
         d3.selectAll(".intra-layer")
-          .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project) });
+          .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project, tilt) });
 
         d3.selectAll(".inter-layer")
-          .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project) });
+          .attr("d", function (d) { return edge_line(d, x_0, y_0, d_project, tilt) });
 
         // Recalculate box postitions
         for (i = 0; i < nLayers; i++) {
           d3.selectAll(`#box${i}`)
-            .attr("d", function (d) { return box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project) })
+            .attr("d", function (d) { return box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt) })
             .attr("fill", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
             .attr("stroke", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
         }
@@ -407,15 +490,17 @@
       }
 
       // Listen to the slider?
-      d3.select("#slider-x0").on("change", function (d) {
-        selectedValue = this.value
-        changex0(selectedValue, y_0, d_project)
+      d3.select("#slider-y0").on("input", function (d) {
+        // selectedValue = this.value
+        y_0 = this.value
+        changex0(x_0, y_0, d_project, tilt)
 
       })
 
-      d3.select("#slider-y0").on("change", function (d) {
-        selectedValue = this.value
-        changex0(x_0, selectedValue, d_project)
+      d3.select("#slider-tilt").on("input", function (d) {
+        // selectedValue = this.value
+        tilt = this.value
+        changex0(x_0, y_0, d_project, tilt)
 
       })
 
@@ -533,3 +618,4 @@
 
 
   </script>
+</body>
