@@ -166,7 +166,8 @@ h2 {
     <div>
     Color nodes by:
     <select id="color-dropdown" title="Node color">
-    <option value="name">Name</option>
+    <option value="L2">Layer</option>
+    <option value="L1">L1</option>
     </select>
     </div>
 
@@ -345,21 +346,63 @@ d3.json("data/mx_slide10.json", function(error, graph) {
 
   var node_colors = ["#58c3be","#7dbf6d","#db7368", "#c5a750","#a688d5","#7dbf6d"];
 
-  if (nLayers < 5) {
-    var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-  } else {
-    var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-  }
+  // if (nLayers < 5) {
+  //   var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  // } else {
+  //   var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  // }
+  var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+  // var L1_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+  var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
 
-  d3.select("#color-dropdown").text("first");
 
-  layer_data = Object.getOwnPropertyNames(graph.nodes[0])
-  d3.select("#color-dropdown").selectAll("option")
-    .data(layer_data)
-    .enter()
-      .append("option")
-        .attr("value", function(d) {return d})
-        .text(function(d) {return d});
+  // d3.select("#color-dropdown").text("first");
+
+  // layer_data = Object.getOwnPropertyNames(graph.nodes[0])
+  // d3.select("#color-dropdown").selectAll("option")
+  //   .data(layer_data)
+  //   .enter()
+  //     .append("option")
+  //       .attr("value", function(d) {return d})
+  //       .text(function(d) {return d});
+
+  d3.select("select")
+    .on("change",function(d){
+      var selected = d3.select("#color-dropdown").node().value;
+      // color = {
+      //   return d => color_scale();
+      // }
+      console.log(selected)
+
+      if (selected == "L1"){
+        node.selectAll("circle")
+          .attr("fill",function(d) {return L1_colormap(d[selected])})
+          .style("mix-blend-mode", "none")
+
+        d3.selectAll(".boxes")
+          .attr("fill", "white")
+          .attr("stroke", "white")
+          .style("fill-opacity", 0.04)
+          .style("stroke-opacity", 0.2)
+
+        
+      }
+
+      if (selected == "L2"){
+        node.selectAll("circle")
+          .attr("fill", function(d) {return node_colormap(d[selected])});
+
+        for (i=nLayers-1; i>-1; i--) {
+          d3.selectAll(`#box${i}`)
+            .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+            .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+            .style("fill-opacity", 0.1)
+            .style("stroke-opacity", 0.5)
+        }
+
+      }
+      // console.log(d3.scaleLinear(graph.nodes[selected]));
+    })
 
 // functions and info for edges
   function edge_line(d, x_0, y_0, d_project, tilt) {
@@ -393,9 +436,10 @@ d3.json("data/mx_slide10.json", function(error, graph) {
 
   var boxes = svgmx.append("g")
 
+
   // Can create an array of layers and then attach that data instead
   // of using a for loop
-  for (i=0; i<nLayers; i++) {
+  for (i=nLayers-1; i>-1; i--) {
     boxes.append("path")
       .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
       .attr("class", "boxes")
@@ -426,7 +470,7 @@ d3.json("data/mx_slide10.json", function(error, graph) {
     .attr("r", node_radius)
     .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
     .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
-    .attr("fill", function(d) {return node_colormap(d.L2)})
+    .attr("fill", function(d) {console.log(d.L2); return node_colormap(d.L2)})
     .attr("class", "nodes_circles")
     .attr("id", function(d) {return d.id})
 
@@ -439,18 +483,6 @@ d3.json("data/mx_slide10.json", function(error, graph) {
 
 
 
-  var boxes = svgmx.append("g")
-
-  // Can create an array of layers and then attach that data instead
-  // of using a for loop
-  for (i=nLayers-1; i>-1; i--) {
-    boxes.append("path")
-      .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
-      .attr("class", "boxes")
-      .attr("id", `box${i}`)
-      .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-      .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-    }
 
 
 
@@ -509,8 +541,8 @@ d3.json("data/mx_slide10.json", function(error, graph) {
     for (i=nLayers-1; i>-1; i--) {
       d3.selectAll(`#box${i}`)
         .attr("d",function(d) {return box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt)})
-        .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-        .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+        // .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+        // .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
     }
 
 
