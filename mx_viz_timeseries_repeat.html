@@ -159,7 +159,8 @@
       <div>
         Color nodes by:
         <select id="color-dropdown" title="Node color">
-          <option value="name">Name</option>
+        <option value="L2">Layer</option>
+        <option value="L1">L1</option>
         </select>
       </div>
 
@@ -340,15 +341,45 @@
 
       var node_colormap = d3.scaleSequential(d3.interpolateRdYlBu).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
 
-      d3.select("#color-dropdown").text("first");
+      var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
 
-      layer_data = Object.getOwnPropertyNames(graph.nodes[0])
-      d3.select("#color-dropdown").selectAll("option")
-        .data(layer_data)
-        .enter()
-        .append("option")
-        .attr("value", function (d) { return d })
-        .text(function (d) { return d });
+      d3.select("select")
+        .on("change",function(d){
+          var selected = d3.select("#color-dropdown").node().value;
+          // color = {
+          //   return d => color_scale();
+          // }
+          console.log(selected)
+
+          if (selected == "L1"){
+            node.selectAll("circle")
+              .attr("fill",function(d) {return L1_colormap(d[selected])})
+              .style("mix-blend-mode", "none")
+
+            d3.selectAll(".boxes")
+              .attr("fill", "white")
+              .attr("stroke", "white")
+              .style("fill-opacity", 0.04)
+              .style("stroke-opacity", 0.2)
+
+            
+          }
+
+          if (selected == "L2"){
+            node.selectAll("circle")
+              .attr("fill", function(d) {return node_colormap(d[selected])});
+
+            for (i=nLayers-1; i>-1; i--) {
+              d3.selectAll(`#box${i}`)
+                .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+                .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
+                .style("fill-opacity", 0.1)
+                .style("stroke-opacity", 0.5)
+            }
+
+          }
+          // console.log(d3.scaleLinear(graph.nodes[selected]));
+        })
 
       // functions and info for edges
       function edge_line(d, x_0, y_0, d_project) {
@@ -480,8 +511,6 @@
         for (i = 0; i < nLayers; i++) {
           d3.selectAll(`#box${i}`)
             .attr("d", function (d) { return box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt) })
-            .attr("fill", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
-            .attr("stroke", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
         }
 
 
