@@ -226,7 +226,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide10.json", function(error, graph) {
+d3.json("data/mx_slide14.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -327,7 +327,7 @@ d3.json("data/mx_slide10.json", function(error, graph) {
   if (nLayers < 5) {
 
     var y_scale = d3.scaleLinear()
-      .range([150 + 30*(5-nLayers), heightmx-150 - 30*(5-nLayers)])
+      .range([50 + 30*(5-nLayers), heightmx-50 - 30*(5-nLayers)])
 
 
   } else {
@@ -376,7 +376,7 @@ d3.json("data/mx_slide10.json", function(error, graph) {
 
       if (selected == "L1"){
         node.selectAll("circle")
-          .attr("fill",function(d) {return L1_colormap(d[selected])})
+          .attr("fill",function(d) {console.log(d.L1,L1_colormap(d[selected])); return L1_colormap(d[selected])})
           .style("mix-blend-mode", "none")
 
         d3.selectAll(".boxes")
