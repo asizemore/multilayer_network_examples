@@ -414,7 +414,7 @@
           .range([20, widthsadj-20]);
         x_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }))
     
-        var rect_r = (widthsadj-20)/graph.nodes.length;
+        var rect_r = (widthsadj-40)/graph.nodes.length;
     
     
         // draw box for heatmap
