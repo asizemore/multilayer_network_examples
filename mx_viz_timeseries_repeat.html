@@ -222,7 +222,7 @@
     svgmx.attr("class", "svg_class")
 
 
-    d3.json("data/mx_slide10.json", function (error, graph) {
+    d3.json("data/mx_slide11.json", function (error, graph) {
       if (error) throw error;
 
 
@@ -325,9 +325,14 @@
 
 
       var y_scale = d3.scaleLinear()
-        .range([150, heightmx - 150])
+        .range([80, heightmx - 80])
 
-      y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+      // y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+
+      var nodes_extent = d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt)});
+      var extent_buffer = 0.01 
+      y_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
+      console.log(y_scale.domain())
 
 
       var x_scale = d3.scaleLinear()
@@ -471,17 +476,20 @@
 
 
       // Slider functions
-      function changex0(selectedValuex, selectedValuey, selected_value_d) {
-        x_0 = selectedValuex;
-        y_0 = selectedValuey;
-        d_project = selected_value_d;
-        console.log(x_0)
-        console.log(y_0)
+      function changex0(selectedValuex, selectedValuey, selected_value_d, selected_tilt) {
+        x_0 = Number(selectedValuex);
+        y_0 = Number(selectedValuey);
+        d_project = Number(selected_value_d);
+        tilt = Number(selected_tilt);
         // Need to recalculate the x_scale domain each time
         x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
 
         // And y scale
-        y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+        // y_scale.domain(d3.extent(graph.nodes, function (d) { return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+        var nodes_extent1 = d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt)});
+        extent_buffer = 0.01 
+        y_scale.domain([nodes_extent1[0] - extent_buffer, nodes_extent1[1] + extent_buffer]);
+
 
         // Recalculate node position
         d3.selectAll(".nodes_circles")

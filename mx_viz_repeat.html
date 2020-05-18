@@ -226,7 +226,7 @@ var svgmx= d3.select("#svg-mx"),
 svgmx.attr("class", "svg_class")
 
 
-d3.json("data/mx_slide14.json", function(error, graph) {
+d3.json("data/mx_slide10.json", function(error, graph) {
   if (error) throw error;
 
 
@@ -265,9 +265,20 @@ d3.json("data/mx_slide14.json", function(error, graph) {
   box_radiusx = Math.max(...diffsx)
   box_radiusy = Math.max(...diffsy)
 
+  var xs = [];
+  var ys = [];
+  for (i=0; i< nNodes; i++) {
+    xs.push(graph.nodes[i].x)
+    ys.push(graph.nodes[i].y)
+  }
 
   // Set the box buffer
-  var box_buffer = 0.15;
+
+  boxspan_x = [Math.min(...xs), Math.max(...xs)]
+  boxspan_y = [Math.min(...ys), Math.max(...ys)]
+  console.log(boxspan_x,boxspan_y)
+
+
 
   // Projection functions
   var x_0 = 10;
@@ -300,20 +311,20 @@ d3.json("data/mx_slide14.json", function(error, graph) {
 
   var d_project = 1, l_v = 1
   // Define box path
-  function box_path(box_center, box_radiusx, box_radiusy, box_buffer, layer, x_0, y_0, d_project, tilt) {
+  function box_path(boxspan_x, boxspan_y, box_buffer, layer, x_0, y_0, d_project, tilt) {
 
     // need to project, then scale the projection
         var z_value = graph.nodes.filter(function(n){return n.L2 == layer;})[0].z
 
 
-        const x1p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0, tilt));
-        const x2p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, x_0, tilt));
-        const y1p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0, tilt));
-        const y2p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] + box_radiusy + box_buffer, z_value, d_project, y_0, tilt));
-        const x3p = x_scale(project_x(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0, tilt));
-        const y3p = y_scale(project_y(box_center[0] + box_radiusx + box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0, tilt));
-        const x4p = x_scale(project_x(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, x_0, tilt));
-        const y4p = y_scale(project_y(box_center[0] - box_radiusx - box_buffer, box_center[1] - box_radiusy - box_buffer, z_value, d_project, y_0, tilt));
+        const x1p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
+        const y1p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
+        const x2p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
+        const y2p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
+        const x3p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
+        const y3p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
+        const x4p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
+        const y4p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
         //
 
         return `M ${x1p},${y1p} L ${x2p},${y2p} L ${x3p} ${y3p} L ${x4p} ${y4p} L ${x1p} ${y1p}`;
@@ -342,7 +353,15 @@ d3.json("data/mx_slide14.json", function(error, graph) {
   var x_scale = d3.scaleLinear()
     .range([150, widthmx-150])
 
-  x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
+
+  var box_buffer = 0.2;
+  var nodes_extent = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
+  var extent_buffer = 0.01 
+  x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
+  console.log([nodes_extent[0] - extent_buffer, nodes_extent[1]])
+  // need to define extent first then subtract cause im not projecting rn
+
+  console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
 
   var node_colors = ["#58c3be","#7dbf6d","#db7368", "#c5a750","#a688d5","#7dbf6d"];
 
@@ -372,11 +391,10 @@ d3.json("data/mx_slide14.json", function(error, graph) {
       // color = {
       //   return d => color_scale();
       // }
-      console.log(selected)
 
       if (selected == "L1"){
         node.selectAll("circle")
-          .attr("fill",function(d) {console.log(d.L1,L1_colormap(d[selected])); return L1_colormap(d[selected])})
+          .attr("fill",function(d) {return L1_colormap(d[selected])})
           .style("mix-blend-mode", "none")
 
         d3.selectAll(".boxes")
@@ -441,7 +459,7 @@ d3.json("data/mx_slide14.json", function(error, graph) {
   // of using a for loop
   for (i=nLayers-1; i>-1; i--) {
     boxes.append("path")
-      .attr("d",box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
+      .attr("d",box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt))
       .attr("class", "boxes")
       .attr("id", `box${i}`)
       .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
@@ -512,15 +530,18 @@ d3.json("data/mx_slide14.json", function(error, graph) {
   })
 
   // Slider functions
-  function changex0(selectedValuex, selectedValuey, selected_value_d, tilt) {
-    x_0 = selectedValuex;
-    y_0 = selectedValuey;
-    d_project = selected_value_d;
-    console.log(x_0)
-    console.log(y_0)
-    console.log(tilt)
+  function changex0(selectedValuex, selectedValuey, selected_value_d, selected_tilt) {
+    x_0 = Number(selectedValuex);
+    y_0 = Number(selectedValuey);
+    d_project = Number(selected_value_d);
+    tilt = Number(selected_tilt);
+
     // Need to recalculate the x_scale domain each time
-    x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
+    extent_buffer = 0.01
+    // x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
+    var nodes_extent1 = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt)});
+    x_scale.domain([nodes_extent1[0] - extent_buffer, nodes_extent1[1] + extent_buffer]);
+
 
     // And y scale
     y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
@@ -544,7 +565,7 @@ d3.json("data/mx_slide14.json", function(error, graph) {
     // Recalculate box postitions
     for (i=nLayers-1; i>-1; i--) {
       d3.selectAll(`#box${i}`)
-        .attr("d",function(d) {return box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt)})
+        .attr("d",function(d) {return box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt)})
         // .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
         // .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
     }
