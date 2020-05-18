@@ -16,8 +16,9 @@
       // need to know how many nodes in layer 1
       // Would be better to get the number of unique values in L1 ...
       var nodes_in_L1 = d3.extent(graph.nodes, function (d) { return d.L1 })
-      console.log(nodes_in_L1)
+
       var nNodes = nodes_in_L1[1] + 1;
+      var nNodes_total = d3.extent(graph.nodes, function(d) {return d.id})[1];
 
       // Get number of layers
       // Would be better to get the number of unique values in L2.
@@ -26,7 +27,7 @@
       // Get coordinates of the first layer of nodes
       x_pos = [];
       y_pos = [];
-      console.log(nNodes)
+
       for (i = 0; i < nNodes; i++) {
         x_pos.push(graph.nodes[i].x);
         y_pos.push(graph.nodes[i].y)
@@ -119,7 +120,7 @@
       var nodes_extent = d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt)});
       var extent_buffer = 0.01 
       y_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
-      console.log(y_scale.domain())
+
 
 
       var x_scale = d3.scaleLinear()
@@ -137,7 +138,6 @@
           // color = {
           //   return d => color_scale();
           // }
-          console.log(selected)
 
           if (selected == "L1"){
             node.selectAll("circle")
@@ -166,7 +166,7 @@
             }
 
           }
-          // console.log(d3.scaleLinear(graph.nodes[selected]));
+
         })
 
       // functions and info for edges
@@ -195,6 +195,19 @@
         return edge_class_id
       }
 
+      var boxes = svgmx.append("g")
+
+      // Can create an array of layers and then attach that data instead
+      // of using a for loop
+      for (i = 0; i < nLayers; i++) {
+        boxes.append("path")
+          .attr("d", box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
+          .attr("class", "boxes")
+          .attr("id", `box${i}`)
+          .attr("fill", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
+          .attr("stroke", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
+      }
+
       var link = svgmx.append("g")
         .selectAll("line")
         .data(graph.links)
@@ -210,6 +223,8 @@
         .selectAll("g")
         .data(graph.nodes)
         .enter().append("g")
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
 
 
       node.append("circle")
@@ -229,18 +244,6 @@
 
 
 
-      var boxes = svgmx.append("g")
-
-      // Can create an array of layers and then attach that data instead
-      // of using a for loop
-      for (i = 0; i < nLayers; i++) {
-        boxes.append("path")
-          .attr("d", box_path(box_center, box_radiusx, box_radiusy, box_buffer, i, x_0, y_0, d_project, tilt))
-          .attr("class", "boxes")
-          .attr("id", `box${i}`)
-          .attr("fill", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
-          .attr("stroke", function (d) { return node_colormap(graph.nodes.filter(function (n) { return n.L2 == i; })[0].L2) })
-      }
 
 
 
@@ -341,7 +344,7 @@
       // // Edge weight colormap
       //
       var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function (d) { return d.weight })[1], 0]);
-      console.log([0, d3.extent(graph.links, function (d) { return d.weight })[1]])
+
       //
       var svgsadj = d3.select("#svg-sadj"),
         widthsadj = +svgsadj.attr("width"),
@@ -358,9 +361,9 @@
         .range([20, widthsadj - 20]);
       x_scale2.domain(d3.extent(graph.nodes, function (d) { return d.id; }))
 
-      var rect_r = (widthsadj - 20) / graph.nodes.length;
-      console.log(widthsadj)
-      console.log(rect_r)
+      var rect_r = (widthsadj - 40) / graph.nodes.length;
+
+
 
       // draw box for heatmap
       svgsadj.append("rect")
@@ -388,12 +391,14 @@
         .selectAll("rect")
         .data(graph.links)
         .enter().append("rect")
-        .attr("x", function (d) { return x_scale2(get_target_node(d).id) })
+        .attr("x", function (d) {return x_scale2(get_target_node(d).id) })
         .attr("y", function (d) { return y_scale2(get_source_node(d).id) })
         .style("fill", function (d) { return edge_colormap(d.weight) })
         .attr("height", rect_r)
         .attr("width", rect_r)
         .attr("class", "heatmap")
+
+
 
 
 
@@ -419,8 +424,65 @@
         .style("stroke", function (d) { return node_colormap(d.L2) })
         .style("stroke-width", 3)
 
+      console.log(y_scale2.range())
+
+      var col_highlight = svgsadj.append("rect")
+        .attr("x",function() {return x_scale2(0)})
+        .attr("y",function() {return y_scale2(0)})
+        .attr("width", rect_r-1)
+        .attr("height", y_scale2.range()[1]-y_scale2.range()[0] + rect_r)
+        .style("opacity", 0)
+        .attr("class", "highlights")
+
+      var row_highlight = svgsadj.append("rect")
+        .attr("x", function() {return x_scale2(0)})
+        .attr("y", function() {return y_scale2(0)})
+        .attr("width", x_scale2.range()[1] - x_scale2.range()[0] + rect_r)
+        .attr("height", rect_r-1)
+        .style("opacity", 0)
+        .attr("class", "highlights")
 
 
+      // Mouseover and Mouseouts
+      function mouseover() {
+        d3.select(this).selectAll("circle").transition()
+          .duration(100)
+          .attr("r",node_radius*2)
+
+
+
+        // Perhaps highlight any edges from this node?
+
+        // Now highlight on the adj matrix
+
+        var selected_node_id = d3.select(this).select("circle").attr("id");
+
+        // Move col_highlight to appropriate spot and then show it!
+        col_highlight
+          .attr("x", function() {return x_scale2(selected_node_id)})
+          .style("opacity", 1);
+
+        row_highlight
+          .attr("y", function() {return y_scale2(selected_node_id)})
+          .style("opacity", 1);
+
+
+
+
+
+      }
+
+      function mouseout() {
+        d3.select(this).selectAll("circle").transition()
+          .duration(100)
+          .attr("r",node_radius)
+
+        col_highlight
+          .style("opacity", 0);
+
+        row_highlight
+          .style("opacity", 0);
+      }
 
 
 

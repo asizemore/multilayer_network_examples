@@ -130,5 +130,13 @@
     font-family: "Helvetica Neue", Helvetica, sans-serif;
     font-weight: lighter;
     text-align: right;
-  }
+    }
+
+    .highlights {
+        stroke: white;
+        fill: none;
+        mix-blend-mode: exclusion;
+        stroke-width: 1px;
+      }
+  
   
