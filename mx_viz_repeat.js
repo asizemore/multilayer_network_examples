@@ -20,6 +20,8 @@
       var nodes_in_L1 = d3.extent(graph.nodes, function(d) {return d.L1})
     
       var nNodes = nodes_in_L1[1]+1;
+
+      var nNodes_total = d3.extent(graph.nodes, function(d) {return d.id})[1]
     
     
       // Get number of layers
@@ -267,6 +269,8 @@
         .selectAll("g")
         .data(graph.nodes)
         .enter().append("g")
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
     
     
       node.append("circle")
@@ -470,6 +474,61 @@
             .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
             .style("stroke", function(d) {return node_colormap(d.L2)})
             .style("stroke-width", 8)
+
+        var col_highlight = svgsadj.append("rect")
+          .attr("x",function() {return x_scale2(0)})
+          .attr("y",function() {return y_scale2(0)})
+          .attr("width", rect_r-1)
+          .attr("height", function() {return rect_r*nNodes_total})
+          .style("opacity", 0)
+          .attr("class", "highlights")
+
+        var row_highlight = svgsadj.append("rect")
+          .attr("x", function() {return x_scale2(0)})
+          .attr("y", function() {return y_scale2(0)})
+          .attr("width", function() {return rect_r*nNodes_total})
+          .attr("height", rect_r-1)
+          .style("opacity", 0)
+          .attr("class", "highlights")
+
+
+        // Mouseover and Mouseouts
+        function mouseover() {
+          d3.select(this).selectAll("circle").transition()
+            .duration(100)
+            .attr("r",node_radius*2)
+
+          // Perhaps highlight any edges from this node?
+
+          // Now highlight on the adj matrix
+
+          var selected_node_id = d3.select(this).select("circle").attr("id");
+          console.log(selected_node_id)
+
+          // Move col_highlight to appropriate spot and then show it!
+          col_highlight
+            .attr("x", function() {return x_scale2(selected_node_id)})
+            .style("opacity", 1);
+
+          row_highlight
+            .attr("y", function() {return y_scale2(selected_node_id)})
+            .style("opacity", 1);
+
+
+
+        }
+
+        function mouseout() {
+          d3.select(this).selectAll("circle").transition()
+            .duration(100)
+            .attr("r",node_radius)
+
+          col_highlight
+            .style("opacity", 0);
+
+          row_highlight
+            .style("opacity", 0);
+        }
     
     
     
@@ -480,4 +539,3 @@
     });
     
     
-    // <!-- </script> -->

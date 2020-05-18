@@ -130,3 +130,10 @@
       mix-blend-mode: lighten;
       z-index: -1;
     }
+
+    .highlights {
+      stroke: white;
+      fill: none;
+      mix-blend-mode: exclusion;
+      stroke-width: 1px;
+    }
