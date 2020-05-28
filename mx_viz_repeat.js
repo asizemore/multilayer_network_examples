@@ -1,7 +1,6 @@
 // <!-- begin javascript -->
 // <!-- <script> -->
 
-
     // This file originally modified from https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
     var svgmx= d3.select("#svg-mx"),
         widthmx = +svgmx.attr("width"),
@@ -13,6 +12,8 @@
     
     d3.json("data/mx_missingnodes.json", function(error, graph) {
       if (error) throw error;
+
+
     
     
       // need to know how many nodes in layer 1
@@ -306,6 +307,8 @@
           filename: 'mx',
         }
         d3_save_svg.save(d3.select('#svg-mx').node(), config);
+
+        // DOM.download(() => serialize(d3.select('#svg-mx')), "test", "Save as SVG")
       });
     
       d3.select('#sadj-button').on('click', function() {
