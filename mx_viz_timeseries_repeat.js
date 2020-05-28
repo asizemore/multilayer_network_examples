@@ -9,7 +9,7 @@
     svgmx.attr("class", "svg_class")
 
 
-    d3.json("data/mx_slide11.json", function (error, graph) {
+    d3.json("data/mx_timeseries.json", function (error, graph) {
       if (error) throw error;
 
 
