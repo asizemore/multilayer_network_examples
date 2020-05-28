@@ -128,7 +128,7 @@
 
       x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
 
-      var node_colormap = d3.scaleSequential(d3.interpolateRdYlBu).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
+      var node_colormap = d3.scaleSequential(d3.interpolateYlGnBu).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
 
       var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
 

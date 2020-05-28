@@ -87,11 +87,12 @@
       stroke: gray;
       stroke-width: 0.2px;
       mix-blend-mode: lighten;
+      opacity: 0.2;
     }
   
     .intra-layer {
       stroke: gray;
-      stroke-width: 0.2px;
+      stroke-width: 0.3px;
       mix-blend-mode: color-dodge;
     }
   
@@ -107,10 +108,11 @@
     }
   
     .nodes_strokes {
-      stroke: gray;
-      stroke-width: 1.5;
+      stroke: rgb(230,230,230);
+      stroke-width: 0.8;
       fill: none;
       mix-blend-mode: lighten;
+      opacity: 0.8;
     }
   
     text {
