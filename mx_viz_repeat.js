@@ -11,7 +11,7 @@
     svgmx.attr("class", "svg_class")
     
     
-    d3.json("data/mx_slide10.json", function(error, graph) {
+    d3.json("data/mx_missingnodes.json", function(error, graph) {
       if (error) throw error;
     
     
@@ -150,14 +150,20 @@
     
       console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
     
-      var node_colors = ["#58c3be","#7dbf6d","#db7368", "#c5a750","#a688d5","#7dbf6d"];
+      var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
     
-      // if (nLayers < 5) {
-      //   var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-      // } else {
-      //   var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-      // }
-      var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+      if (nLayers < 6) {
+        var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+        console.log(node_colormap(0))
+        console.log(node_colormap(1))
+        console.log(node_colormap(2))
+        console.log(node_colormap(3))
+        console.log(node_colormap(4))
+        console.log(node_colors)
+      } else {
+        var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
+      }
+      
       // var L1_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
       var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
     
@@ -324,6 +330,8 @@
         y_0 = Number(selectedValuey);
         d_project = Number(selected_value_d);
         tilt = Number(selected_tilt);
+
+        console.log(x_0,y_0,d_project,tilt)
     
         // Need to recalculate the x_scale domain each time
         extent_buffer = 0.01

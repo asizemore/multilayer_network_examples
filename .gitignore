@@ -1,6 +1,7 @@
 # Files and such
 
 data/*
+!data/.gitkeep
 *.pse
 *.pdf
 *.svg
