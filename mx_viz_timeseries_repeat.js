@@ -5,10 +5,11 @@
       widthmx = +svgmx.attr("width"),
       heightmx = +svgmx.attr("height");
 
+      
 
     svgmx.attr("class", "svg_class")
 
-
+    // Change filename here
     d3.json("data/mx_timeseries.json", function (error, graph) {
       if (error) throw error;
 

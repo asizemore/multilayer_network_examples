@@ -10,7 +10,7 @@ RUN pip install "flask==1.0.1" "CairoSVG==2.1.3"
 
 USER root
 RUN apt-get update && apt-get install -y \
-  libz-dev
+  libz-dev  
   # curl\
   # nodejs
 USER jovyan

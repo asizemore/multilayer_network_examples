@@ -6,7 +6,11 @@ data/*
 *.pdf
 *.svg
 
-d3-save-svg-gh-pages/*
+
+.bash_history
+
+d3-save-svg-gh-pages/.npmignore
+d3-save-svg-gh-pages/.gitignore
 
 .vscode-server/
 
