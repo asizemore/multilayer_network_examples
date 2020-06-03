@@ -10,7 +10,7 @@
     svgmx.attr("class", "svg_class")
     
     // Change filename here
-    d3.json("data/mx_missingnodes.json", function(error, graph) {
+    d3.json("data/mx_2layers2.json", function(error, graph) {
       if (error) throw error;
 
 

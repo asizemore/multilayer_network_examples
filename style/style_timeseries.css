@@ -84,16 +84,18 @@
     }
   
     .inter-layer {
-      stroke: gray;
+      stroke: white;
       stroke-width: 0.2px;
       mix-blend-mode: lighten;
       opacity: 0.2;
+      fill: none;
     }
   
     .intra-layer {
-      stroke: gray;
+      stroke: white;
       stroke-width: 0.3px;
       mix-blend-mode: color-dodge;
+      fill: none;
     }
   
     .boxes {
