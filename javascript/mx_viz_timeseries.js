@@ -9,9 +9,11 @@ console.log("hi")
 
     svgmx.attr("class", "svg_class")
 
-    // Change filename here
-    d3.json("data/mx_timeseries.json", function (error, graph) {
-      if (error) throw error;
+    // // Change filename here
+    // d3.json("data/mx_timeseries.json", function (error, graph) {
+    //   if (error) throw error;
+    var graph = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
+    console.log(graph)
 
 
       // need to know how many nodes in layer 1
@@ -130,6 +132,7 @@ console.log("hi")
       x_scale.domain(d3.extent(graph.nodes, function (d) { return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
 
       var node_colormap = d3.scaleSequential(d3.interpolateYlGnBu).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
+      console.log(node_colormap)
       // var node_colormap = d3.scaleSequential(d3.interpolateMagma).domain(d3.extent(graph.nodes, function (d) { return d.L2 }));
 
       var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
@@ -491,5 +494,5 @@ console.log("hi")
 
 
 
-    });
+    // });
 
