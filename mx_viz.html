@@ -2,7 +2,8 @@
 <meta charset="utf-8">
 
 <head>
-  <link rel="stylesheet" href="style/style.css">
+    <title>{{ title }} | KeplerMapper</title>
+    <style>{{ css_text }}</style>
 </head>
 
 <body style="background-color:rgb(1, 7, 9)"5>
@@ -10,6 +11,8 @@
   <div id="header">
     <h1> Multilayer network </h1>
   </div>
+
+  <div id="datadiv" data-mxgraph='{{mxgraph}}' style='display:none'></div>
 
 
   <div id="svgs-div">
@@ -74,13 +77,13 @@
 <!-- Tip: placing scripts at the bottom of body improves display speed -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
-<script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script>
-<script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
+<!-- <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script> -->
+<!-- <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script> -->
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-<script src="mx_viz.js"></script>
+<script>{{ js_text }}</script>
 
 
 </body>

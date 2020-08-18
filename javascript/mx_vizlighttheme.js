@@ -10,9 +10,11 @@
     svgmx.attr("class", "svg_class")
     
     // Change filename here
-    d3.json("data/mx_2layers2.json", function(error, graph) {
-      if (error) throw error;
+    // d3.json("data/mx_2layers2.json", function(error, graph) {
+    //   if (error) throw error;
 
+    var graph = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
+    console.log(graph)
 
     
     
@@ -575,6 +577,6 @@
     
     
     
-    });
+    // });
     
     
