@@ -1,4 +1,4 @@
-FROM jupyter/datascience-notebook:latest
+FROM jupyter/datascience-notebook:9f4983c5d1f3
 
 RUN pip install networkx
 RUN pip install utils

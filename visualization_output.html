@@ -1,4 +1,677 @@
-// <!-- begin javascript -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <title>MX viz test | KeplerMapper</title>
+    <style>    #header {
+      margin: auto;
+      margin-top: 30px;
+      width: 95%;
+      height: 40px;
+      padding: 10px;
+      overflow: auto;
+      background: rgba(255,255,255,0.06);
+    
+    }
+    
+    h2 {
+      color: white;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      margin-top: 5px;
+      margin-bottom: 30px;
+      font-weight: lighter;
+    }
+    
+    #header h1 {
+      margin: auto;
+      opacity: 1;
+      color: white;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-weight: 300;
+      padding-left: 20px;
+    
+    }
+    
+    #svgdiv-mx {
+      margin: auto;
+      padding: 0px 30px;
+    }
+    
+    #svg-mx {
+      margin: 0 auto;
+      isolation: isolate;
+    }
+    
+    #svg-sadj {
+      margin: 0 auto;
+    }
+    
+    #footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      margin: auto;
+      width: 100%;
+      color: white;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-weight: lighter;
+      text-align: right;
+    }
+    
+    #options {
+      margin: auto;
+      padding: 10px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      width: 95%;
+      color:white;
+      background: rgba(255,255,255,0.03);
+      text-align: center;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-weight: lighter;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 1fr;
+      grid-column-gap: 10px;
+    }
+    
+    #options text{
+      padding-left: 20px;
+    }
+    
+    
+    
+    #svgdiv-sadj {
+      margin: auto;
+      padding: 0px 30px;
+      text-align: center;
+      height: 600px;
+    }
+    
+    #svgs-div {
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 1fr;
+      grid-column-gap: 10px;
+      width:100%;
+      height: 700px;
+    
+    
+    }
+    
+    
+    .inter-layer {
+      stroke: rgb(255,255,255);
+      stroke-width: 0.5px;
+      mix-blend-mode: color-dodge;
+      opacity: 0.6;
+      fill: none;
+    }
+    
+    .intra-layer {
+      stroke: rgb(255,255,255);
+      stroke-width: 0.8px;
+      mix-blend-mode: color-dodge;
+      opacity: 0.8;
+      fill: none;
+    }
+    
+    .boxes {
+      fill-opacity: 0.1;
+      stroke-width: 3;
+      mix-blend-mode: lighten;
+      stroke-opacity: 0.5;
+    }
+    
+    .nodes_circles {
+      /* Something weird is going on with these TODO */
+      stroke: none;
+      z-index: 1;
+    }
+    
+    .nodes_strokes {
+      stroke: white;
+      stroke-width: 0.9;
+      fill: none;
+      mix-blend-mode: lighten;
+      z-index: -1;
+    }
+
+    .highlights {
+      stroke: white;
+      fill: none;
+      mix-blend-mode: exclusion;
+      stroke-width: 1px;
+    }
+</style>
+</head>
+
+<body style="background-color:rgb(1, 7, 9)"5>
+
+  <div id="header">
+    <h1> Multilayer network </h1>
+  </div>
+
+  <div id="datadiv" data-mxgraph='{
+    "directed": false,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "name": "id0",
+            "x": 20.53838924538707,
+            "y": 19.38559124141536,
+            "z": 0.0,
+            "L1": 0.0,
+            "L2": 0.0,
+            "id": 0
+        },
+        {
+            "name": "id1",
+            "x": 19.0,
+            "y": 19.90026559796619,
+            "z": 0.0,
+            "L1": 1.0,
+            "L2": 0.0,
+            "id": 1
+        },
+        {
+            "name": "id2",
+            "x": 19.742854692785777,
+            "y": 20.915399460933152,
+            "z": 0.0,
+            "L1": 2.0,
+            "L2": 0.0,
+            "id": 2
+        },
+        {
+            "name": "id3",
+            "x": 20.18370332726063,
+            "y": 19.37271535647773,
+            "z": 0.0,
+            "L1": 3.0,
+            "L2": 0.0,
+            "id": 3
+        },
+        {
+            "name": "id4",
+            "x": 20.463772972660777,
+            "y": 20.17707671965283,
+            "z": 0.0,
+            "L1": 4.0,
+            "L2": 0.0,
+            "id": 4
+        },
+        {
+            "name": "id5",
+            "x": 19.925372419650518,
+            "y": 20.036361362960623,
+            "z": 0.0,
+            "L1": 5.0,
+            "L2": 0.0,
+            "id": 5
+        },
+        {
+            "name": "id6",
+            "x": 19.507126046072067,
+            "y": 20.125518911510245,
+            "z": 0.0,
+            "L1": 6.0,
+            "L2": 0.0,
+            "id": 6
+        },
+        {
+            "name": "id7",
+            "x": 20.870455567597773,
+            "y": 20.499989612168047,
+            "z": 0.0,
+            "L1": 7.0,
+            "L2": 0.0,
+            "id": 7
+        },
+        {
+            "name": "id8",
+            "x": 19.46856730069473,
+            "y": 19.413241210249964,
+            "z": 0.0,
+            "L1": 8.0,
+            "L2": 0.0,
+            "id": 8
+        },
+        {
+            "name": "id9",
+            "x": 20.299758427890662,
+            "y": 20.173840526665856,
+            "z": 0.0,
+            "L1": 9.0,
+            "L2": 0.0,
+            "id": 9
+        },
+        {
+            "name": "id10",
+            "x": 20.53838924538707,
+            "y": 19.38559124141536,
+            "z": 2.0,
+            "L1": 0.0,
+            "L2": 1.0,
+            "id": 10
+        },
+        {
+            "name": "id11",
+            "x": 19.0,
+            "y": 19.90026559796619,
+            "z": 2.0,
+            "L1": 1.0,
+            "L2": 1.0,
+            "id": 11
+        },
+        {
+            "name": "id12",
+            "x": 19.742854692785777,
+            "y": 20.915399460933152,
+            "z": 2.0,
+            "L1": 2.0,
+            "L2": 1.0,
+            "id": 12
+        },
+        {
+            "name": "id13",
+            "x": 20.18370332726063,
+            "y": 19.37271535647773,
+            "z": 2.0,
+            "L1": 3.0,
+            "L2": 1.0,
+            "id": 13
+        },
+        {
+            "name": "id14",
+            "x": 20.463772972660777,
+            "y": 20.17707671965283,
+            "z": 2.0,
+            "L1": 4.0,
+            "L2": 1.0,
+            "id": 14
+        },
+        {
+            "name": "id15",
+            "x": 19.925372419650518,
+            "y": 20.036361362960623,
+            "z": 2.0,
+            "L1": 5.0,
+            "L2": 1.0,
+            "id": 15
+        },
+        {
+            "name": "id16",
+            "x": 19.507126046072067,
+            "y": 20.125518911510245,
+            "z": 2.0,
+            "L1": 6.0,
+            "L2": 1.0,
+            "id": 16
+        },
+        {
+            "name": "id17",
+            "x": 20.870455567597773,
+            "y": 20.499989612168047,
+            "z": 2.0,
+            "L1": 7.0,
+            "L2": 1.0,
+            "id": 17
+        },
+        {
+            "name": "id18",
+            "x": 19.46856730069473,
+            "y": 19.413241210249964,
+            "z": 2.0,
+            "L1": 8.0,
+            "L2": 1.0,
+            "id": 18
+        },
+        {
+            "name": "id19",
+            "x": 20.299758427890662,
+            "y": 20.173840526665856,
+            "z": 2.0,
+            "L1": 9.0,
+            "L2": 1.0,
+            "id": 19
+        }
+    ],
+    "links": [
+        {
+            "weight": 2,
+            "source": 0,
+            "target": 4
+        },
+        {
+            "weight": 2,
+            "source": 0,
+            "target": 5
+        },
+        {
+            "weight": 2,
+            "source": 0,
+            "target": 7
+        },
+        {
+            "weight": 1,
+            "source": 0,
+            "target": 10
+        },
+        {
+            "weight": 2,
+            "source": 1,
+            "target": 3
+        },
+        {
+            "weight": 2,
+            "source": 1,
+            "target": 5
+        },
+        {
+            "weight": 2,
+            "source": 1,
+            "target": 6
+        },
+        {
+            "weight": 1,
+            "source": 1,
+            "target": 11
+        },
+        {
+            "weight": 2,
+            "source": 2,
+            "target": 4
+        },
+        {
+            "weight": 2,
+            "source": 2,
+            "target": 5
+        },
+        {
+            "weight": 2,
+            "source": 2,
+            "target": 6
+        },
+        {
+            "weight": 2,
+            "source": 2,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 2,
+            "target": 12
+        },
+        {
+            "weight": 2,
+            "source": 3,
+            "target": 4
+        },
+        {
+            "weight": 2,
+            "source": 3,
+            "target": 5
+        },
+        {
+            "weight": 2,
+            "source": 3,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 3,
+            "target": 13
+        },
+        {
+            "weight": 2,
+            "source": 4,
+            "target": 7
+        },
+        {
+            "weight": 1,
+            "source": 4,
+            "target": 14
+        },
+        {
+            "weight": 2,
+            "source": 5,
+            "target": 6
+        },
+        {
+            "weight": 2,
+            "source": 5,
+            "target": 7
+        },
+        {
+            "weight": 2,
+            "source": 5,
+            "target": 8
+        },
+        {
+            "weight": 2,
+            "source": 5,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 5,
+            "target": 15
+        },
+        {
+            "weight": 2,
+            "source": 6,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 6,
+            "target": 16
+        },
+        {
+            "weight": 2,
+            "source": 7,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 7,
+            "target": 17
+        },
+        {
+            "weight": 2,
+            "source": 8,
+            "target": 9
+        },
+        {
+            "weight": 1,
+            "source": 8,
+            "target": 18
+        },
+        {
+            "weight": 1,
+            "source": 9,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 10,
+            "target": 12
+        },
+        {
+            "weight": 2,
+            "source": 10,
+            "target": 16
+        },
+        {
+            "weight": 2,
+            "source": 10,
+            "target": 17
+        },
+        {
+            "weight": 2,
+            "source": 10,
+            "target": 18
+        },
+        {
+            "weight": 2,
+            "source": 11,
+            "target": 15
+        },
+        {
+            "weight": 2,
+            "source": 11,
+            "target": 18
+        },
+        {
+            "weight": 2,
+            "source": 11,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 12,
+            "target": 13
+        },
+        {
+            "weight": 2,
+            "source": 12,
+            "target": 15
+        },
+        {
+            "weight": 2,
+            "source": 12,
+            "target": 16
+        },
+        {
+            "weight": 2,
+            "source": 12,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 13,
+            "target": 16
+        },
+        {
+            "weight": 2,
+            "source": 14,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 15,
+            "target": 17
+        },
+        {
+            "weight": 2,
+            "source": 15,
+            "target": 18
+        },
+        {
+            "weight": 2,
+            "source": 15,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 16,
+            "target": 17
+        },
+        {
+            "weight": 2,
+            "source": 16,
+            "target": 18
+        },
+        {
+            "weight": 2,
+            "source": 16,
+            "target": 19
+        },
+        {
+            "weight": 2,
+            "source": 17,
+            "target": 18
+        },
+        {
+            "weight": 2,
+            "source": 18,
+            "target": 19
+        }
+    ]
+}' style='display:none'></div>
+
+
+  <div id="svgs-div">
+
+
+    <div id="svgdiv-mx">
+      <svg width="600" height="600" id="svg-mx"></svg>
+    </div>
+
+
+
+
+    <div id="svgdiv-sadj">
+      <h2>supra-adjacency matrix</h2>
+      <svg width="500" height="500" id="svg-sadj"></svg>
+    </div>
+
+  </div>
+
+  <div id="options" width=100 height=200>
+    
+    <div>
+    Color nodes by:
+    <select id="color-dropdown" title="Node color">
+    <option value="L2">Layer</option>
+    <option value="L1">L1</option>
+    </select>
+    </div>
+
+
+    <div>
+    Rotate mx:
+    <button type="button" id="rotate-button">Rotate</button>
+    </div>
+
+    <div>
+    Slider:
+    <!-- Add a slider -->
+    <input type="range" name="x0 Slider" id="slider-x0" min="-20" max="18" value="10">
+    </div>
+
+
+    <div>
+    Slider:
+    <input type="range" name="tilt Slider" id="slider-tilt" min="0" max="900" value="200">
+    </div>
+
+  </div>
+
+  <div id="footer">
+
+    <button type="button" id="mx-button">Save mx</button>
+
+    <button type="button" id="sadj-button">Save sadj</button>
+
+  </div>
+
+
+
+
+<!-- Load d3 and other helper scripts -->
+<!-- Tip: placing scripts at the bottom of body improves display speed -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
+<!-- <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script> -->
+<!-- <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script> -->
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<script>// <!-- begin javascript -->
 // <!-- <script> -->
 
     // This file originally modified from https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
@@ -551,4 +1224,7 @@
     
     // });
     
-    
+    </script>
+
+
+</body>
