@@ -2,7 +2,8 @@
 <meta charset="utf-8">
 
 <head>
-  <style>    #header {
+    <title>MX viz test | KeplerMapper</title>
+    <style>    #header {
       margin: auto;
       margin-top: 30px;
       width: 95%;
@@ -14,7 +15,7 @@
     }
     
     h2 {
-      color: rgb(42, 44, 46);
+      color: white;
       font-family: "Helvetica Neue", Helvetica, sans-serif;
       margin-top: 5px;
       margin-bottom: 30px;
@@ -24,7 +25,7 @@
     #header h1 {
       margin: auto;
       opacity: 1;
-      color: rgb(42, 44, 46);
+      color: white;
       font-family: "Helvetica Neue", Helvetica, sans-serif;
       font-weight: 300;
       padding-left: 20px;
@@ -51,7 +52,7 @@
       bottom: 0;
       margin: auto;
       width: 100%;
-      color: rgb(42, 44, 46);
+      color: white;
       font-family: "Helvetica Neue", Helvetica, sans-serif;
       font-weight: lighter;
       text-align: right;
@@ -63,7 +64,7 @@
       padding-top: 20px;
       padding-bottom: 20px;
       width: 95%;
-      color:rgb(42, 44, 46);
+      color:white;
       background: rgba(255,255,255,0.03);
       text-align: center;
       font-family: "Helvetica Neue", Helvetica, sans-serif;
@@ -100,24 +101,25 @@
     
     
     .inter-layer {
-      stroke: rgb(109, 110, 110);
+      stroke: rgb(255,255,255);
       stroke-width: 0.5px;
-      mix-blend-mode: darken;
+      mix-blend-mode: color-dodge;
       opacity: 0.6;
       fill: none;
     }
     
     .intra-layer {
-      stroke: rgb(143, 144, 146);
-      stroke-width: 1px;
+      stroke: rgb(255,255,255);
+      stroke-width: 0.8px;
+      mix-blend-mode: color-dodge;
       opacity: 0.8;
       fill: none;
     }
     
     .boxes {
-      fill-opacity: 0.2;
+      fill-opacity: 0.1;
       stroke-width: 3;
-      mix-blend-mode: color;
+      mix-blend-mode: lighten;
       stroke-opacity: 0.5;
     }
     
@@ -144,7 +146,7 @@
 </style>
 </head>
 
-<body style="background-color:rgb(255, 255, 255)"5>
+<body style="background-color:rgb(1, 7, 9)"5>
 
   <div id="header">
     <h1> Multilayer network </h1>
@@ -157,8 +159,8 @@
     "nodes": [
         {
             "name": "id0",
-            "x": 20.085481010009257,
-            "y": 20.92303713334387,
+            "x": 20.39831519031843,
+            "y": 20.662586809125873,
             "z": 0.0,
             "L1": 0.0,
             "L2": 0.0,
@@ -166,8 +168,8 @@
         },
         {
             "name": "id1",
-            "x": 20.804611459101913,
-            "y": 19.57077172113737,
+            "x": 19.289801294580776,
+            "y": 20.445945793669903,
             "z": 0.0,
             "L1": 1.0,
             "L2": 0.0,
@@ -175,8 +177,8 @@
         },
         {
             "name": "id2",
-            "x": 19.0,
-            "y": 20.357786469732883,
+            "x": 19.7315717531197,
+            "y": 20.30834293351203,
             "z": 0.0,
             "L1": 2.0,
             "L2": 0.0,
@@ -184,8 +186,8 @@
         },
         {
             "name": "id3",
-            "x": 20.695563481406698,
-            "y": 19.61318941515613,
+            "x": 20.61542037379388,
+            "y": 19.444690070124967,
             "z": 0.0,
             "L1": 3.0,
             "L2": 0.0,
@@ -193,8 +195,8 @@
         },
         {
             "name": "id4",
-            "x": 19.914039133422094,
-            "y": 19.46630276067959,
+            "x": 21.0,
+            "y": 20.231854424327064,
             "z": 0.0,
             "L1": 4.0,
             "L2": 0.0,
@@ -202,8 +204,8 @@
         },
         {
             "name": "id5",
-            "x": 19.821583041438114,
-            "y": 20.153496727705043,
+            "x": 20.103310913535942,
+            "y": 20.008987103239836,
             "z": 0.0,
             "L1": 5.0,
             "L2": 0.0,
@@ -211,8 +213,8 @@
         },
         {
             "name": "id6",
-            "x": 19.44089723993591,
-            "y": 19.611138700641707,
+            "x": 19.569376402751907,
+            "y": 20.89179326446987,
             "z": 0.0,
             "L1": 6.0,
             "L2": 0.0,
@@ -220,8 +222,8 @@
         },
         {
             "name": "id7",
-            "x": 20.69807546853134,
-            "y": 20.477863419447804,
+            "x": 19.941112522514384,
+            "y": 19.496642229712883,
             "z": 0.0,
             "L1": 7.0,
             "L2": 0.0,
@@ -229,8 +231,8 @@
         },
         {
             "name": "id8",
-            "x": 19.624227500154184,
-            "y": 19.588198508737037,
+            "x": 19.505210384500515,
+            "y": 19.12553826232394,
             "z": 0.0,
             "L1": 8.0,
             "L2": 0.0,
@@ -238,8 +240,8 @@
         },
         {
             "name": "id9",
-            "x": 19.915521666000494,
-            "y": 20.23821514341857,
+            "x": 19.845881164884464,
+            "y": 19.383619109493633,
             "z": 0.0,
             "L1": 9.0,
             "L2": 0.0,
@@ -247,8 +249,8 @@
         },
         {
             "name": "id10",
-            "x": 20.085481010009257,
-            "y": 20.92303713334387,
+            "x": 20.39831519031843,
+            "y": 20.662586809125873,
             "z": 2.0,
             "L1": 0.0,
             "L2": 1.0,
@@ -256,8 +258,8 @@
         },
         {
             "name": "id11",
-            "x": 20.804611459101913,
-            "y": 19.57077172113737,
+            "x": 19.289801294580776,
+            "y": 20.445945793669903,
             "z": 2.0,
             "L1": 1.0,
             "L2": 1.0,
@@ -265,8 +267,8 @@
         },
         {
             "name": "id12",
-            "x": 19.0,
-            "y": 20.357786469732883,
+            "x": 19.7315717531197,
+            "y": 20.30834293351203,
             "z": 2.0,
             "L1": 2.0,
             "L2": 1.0,
@@ -274,8 +276,8 @@
         },
         {
             "name": "id13",
-            "x": 20.695563481406698,
-            "y": 19.61318941515613,
+            "x": 20.61542037379388,
+            "y": 19.444690070124967,
             "z": 2.0,
             "L1": 3.0,
             "L2": 1.0,
@@ -283,8 +285,8 @@
         },
         {
             "name": "id14",
-            "x": 19.914039133422094,
-            "y": 19.46630276067959,
+            "x": 21.0,
+            "y": 20.231854424327064,
             "z": 2.0,
             "L1": 4.0,
             "L2": 1.0,
@@ -292,8 +294,8 @@
         },
         {
             "name": "id15",
-            "x": 19.821583041438114,
-            "y": 20.153496727705043,
+            "x": 20.103310913535942,
+            "y": 20.008987103239836,
             "z": 2.0,
             "L1": 5.0,
             "L2": 1.0,
@@ -301,8 +303,8 @@
         },
         {
             "name": "id16",
-            "x": 19.44089723993591,
-            "y": 19.611138700641707,
+            "x": 19.569376402751907,
+            "y": 20.89179326446987,
             "z": 2.0,
             "L1": 6.0,
             "L2": 1.0,
@@ -310,8 +312,8 @@
         },
         {
             "name": "id17",
-            "x": 20.69807546853134,
-            "y": 20.477863419447804,
+            "x": 19.941112522514384,
+            "y": 19.496642229712883,
             "z": 2.0,
             "L1": 7.0,
             "L2": 1.0,
@@ -319,8 +321,8 @@
         },
         {
             "name": "id18",
-            "x": 19.624227500154184,
-            "y": 19.588198508737037,
+            "x": 19.505210384500515,
+            "y": 19.12553826232394,
             "z": 2.0,
             "L1": 8.0,
             "L2": 1.0,
@@ -328,8 +330,8 @@
         },
         {
             "name": "id19",
-            "x": 19.915521666000494,
-            "y": 20.23821514341857,
+            "x": 19.845881164884464,
+            "y": 19.383619109493633,
             "z": 2.0,
             "L1": 9.0,
             "L2": 1.0,
@@ -599,6 +601,8 @@
         }
     ]
 }' style='display:none'></div>
+
+
   <div id="svgs-div">
 
 
@@ -662,7 +666,7 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
 <!-- <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script> -->
-<script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
+<!-- <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script> -->
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -681,9 +685,9 @@
     // Change filename here
     // d3.json("data/mx_2layers2.json", function(error, graph) {
     //   if (error) throw error;
-
     var graph = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
     console.log(graph)
+    console.log("hello")
 
     
     
@@ -693,7 +697,7 @@
     
       var nNodes = nodes_in_L1[1]+1;
 
-
+      var nNodes_total = d3.extent(graph.nodes, function(d) {return d.id})[1]
     
     
       // Get number of layers
@@ -822,9 +826,7 @@
     
       console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
     
-    //   var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
-      var node_colors = ["#0066bd", "#86c25a", "#cba04d", "#ae80d0", "#47d6d6"]
-      shuffle(node_colors)
+      var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
     
       if (nLayers < 6) {
         var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
@@ -918,15 +920,6 @@
     
     
       // Draw!!
-
-
-    var link = svgmx.append("g")
-      .selectAll("line")
-      .data(graph.links)
-      .enter().append("path")
-        .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
-        .attr("class", edge_class);
-  
     
       var boxes = svgmx.append("g")
     
@@ -943,6 +936,12 @@
         }
     
     
+      var link = svgmx.append("g")
+        .selectAll("line")
+        .data(graph.links)
+        .enter().append("path")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
+          .attr("class", edge_class);
     
     
     
@@ -1031,7 +1030,12 @@
           .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
           .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
     
-
+        // Recalculate edge postitions
+        d3.selectAll(".intra-layer")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+    
+        d3.selectAll(".inter-layer")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
     
         // Recalculate box postitions
         for (i=nLayers-1; i>-1; i--) {
@@ -1040,13 +1044,6 @@
             // .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
             // .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
         }
-
-        // Recalculate edge postitions
-        d3.selectAll(".intra-layer")
-            .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
-      
-         d3.selectAll(".inter-layer")
-            .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
     
     
     
@@ -1085,7 +1082,7 @@
         //
         // // Edge weight colormap
         //
-        var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0].reverse());
+        var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0]);
         console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
         //
         var svgsadj= d3.select("#svg-sadj"),
@@ -1095,12 +1092,12 @@
         svgsadj.attr("class", "svg_class")
     
         var y_scale2 = d3.scaleLinear()
-          .range([25, heightsadj-25])
+          .range([20, heightsadj-20])
     
         y_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }));
     
         var x_scale2 = d3.scaleLinear()
-          .range([25, widthsadj-25]);
+          .range([20, widthsadj-20]);
         x_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }))
     
         var rect_r = (widthsadj-40)/graph.nodes.length;
@@ -1108,13 +1105,12 @@
     
         // draw box for heatmap
         svgsadj.append("rect")
-          .attr("x", 25)
-          .attr("y", 25)
-          .attr("height", heightsadj-50 + rect_r)
-          .attr("width", widthsadj-50+ rect_r)
-          .style("stroke", "black")
+          .attr("x", 20)
+          .attr("y", 20)
+          .attr("height", heightsadj-40 + rect_r)
+          .attr("width", widthsadj-40+ rect_r)
+          .style("stroke", "white")
           .style("stroke-width", 0.25)
-          .style("fill", "white")
     
     
     
@@ -1219,26 +1215,6 @@
           row_highlight
             .style("opacity", 0);
         }
-
-
-        function shuffle(array) {
-            var currentIndex = array.length, temporaryValue, randomIndex;
-          
-            // While there remain elements to shuffle...
-            while (0 !== currentIndex) {
-          
-              // Pick a remaining element...
-              randomIndex = Math.floor(Math.random() * currentIndex);
-              currentIndex -= 1;
-          
-              // And swap it with the current element.
-              temporaryValue = array[currentIndex];
-              array[currentIndex] = array[randomIndex];
-              array[randomIndex] = temporaryValue;
-            }
-          
-            return array;
-          }
     
     
     

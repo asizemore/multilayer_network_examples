@@ -6,7 +6,8 @@ data/*
 *.pdf
 *.svg
 
-
+visualization_output.html
+visualization_timeseries.html
 .bash_history
 
 d3-save-svg-gh-pages/.npmignore
