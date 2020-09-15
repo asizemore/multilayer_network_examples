@@ -1,7 +1,7 @@
 # Visualization of small multilayer networks. Code to accompany OHBM 2020 [presentation](https://www.aesizemore.com/data-visualization.html).
 
 
-![MX network](./assets/ohbm_multilayernets-45.png)
+![MX network](assets/ohbm_multilayerNets-45.png)
 
 
 ### This repository contains three functions that create interactive plots of multilayer networks, that can then be downloaded as svg files. For examples, see the `visualization_example_output.html` and `visualization_example_output_timeseries.html` files.
