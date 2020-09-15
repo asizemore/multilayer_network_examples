@@ -7,7 +7,7 @@ run_cmd ?= jupyter notebook
 .PHONY: build
 build:
 	@echo Building $(local_name):$(tag)
-	@docker build --no-cache -t $(local_name):$(tag) .
+	@docker build -t $(local_name):$(tag) .
 
 run:
 	@open http://localhost:8081
