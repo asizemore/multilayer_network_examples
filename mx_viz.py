@@ -185,7 +185,6 @@ def visualize_timeseries(
     # Find the absolute module path and the static files
 #         js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")
     js_path = './javascript/mx_viz_timeseries.js'
-    print(js_path)
     with open(js_path, "r") as f:
         js_text = f.read()
 
