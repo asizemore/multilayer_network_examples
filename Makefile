@@ -1,7 +1,7 @@
 base_dir :=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 local_name = ohbm_2020
-tag ?= ann-dev
+tag ?= v2
 run_cmd ?= jupyter notebook
 
 .PHONY: build
