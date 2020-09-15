@@ -10,6 +10,7 @@ visualization_output.html
 visualization_timeseries.html
 visualization_output_example_*
 .bash_history
+slide*
 
 d3-save-svg-gh-pages/.npmignore
 d3-save-svg-gh-pages/.gitignore
