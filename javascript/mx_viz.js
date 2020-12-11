@@ -268,7 +268,8 @@
         .data(graph.links)
         .enter().append("path")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
-          .attr("class", edge_class);
+          .attr("class", edge_class)
+          .attr("stroke-width", function(d) {console.log(d.weight); return d.weight});
     
     
     

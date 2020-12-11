@@ -102,7 +102,7 @@
     
     .inter-layer {
       stroke: rgb(255,255,255);
-      stroke-width: 0.5px;
+      /* stroke-width: 0.5px; */
       mix-blend-mode: color-dodge;
       opacity: 0.6;
       fill: none;
@@ -110,7 +110,7 @@
     
     .intra-layer {
       stroke: rgb(255,255,255);
-      stroke-width: 0.8px;
+      /* stroke-width: 0.8px; */
       mix-blend-mode: color-dodge;
       opacity: 0.8;
       fill: none;
@@ -10684,7 +10684,8 @@
         .data(graph.links)
         .enter().append("path")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
-          .attr("class", edge_class);
+          .attr("class", edge_class)
+          .attr("stroke-width", function(d) {console.log(d.weight); return d.weight});
     
     
     
