@@ -10560,7 +10560,7 @@
         .range([150, widthmx-150])
     
     
-      var box_buffer = 0.2;
+      var box_buffer = 0.1;
       var nodes_extent = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
       var extent_buffer = 0.01 
       x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
