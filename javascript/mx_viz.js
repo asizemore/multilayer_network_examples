@@ -226,9 +226,20 @@
             const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
             const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
             const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
-    
-    
-            return `M ${x1},${y1} L ${x2},${y2}`;
+
+            let d_path;
+            if (edge_class(d) === "intra-layer") {
+
+              d_path = `M ${x1},${y1} 
+                   Q ${x1+20},${y1+20},${x2},${y2}`;
+
+            } else {
+
+              d_path = `M ${x1},${y1} 
+                   L ${x2},${y2}`;
+
+            }
+            return d_path;
           }
     
       function edge_class(d) {
@@ -269,7 +280,7 @@
         .enter().append("path")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
           .attr("class", edge_class)
-          .attr("stroke-width", function(d) {console.log(d.weight); return d.weight});
+          .attr("stroke-width", function(d) {console.log(d.weight); return 10*d.weight});
     
     
     

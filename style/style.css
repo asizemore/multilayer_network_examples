@@ -97,7 +97,7 @@
     
     .inter-layer {
       stroke: rgb(255,255,255);
-      /* stroke-width: 0.5px; */
+      stroke-width: 0.5px;
       mix-blend-mode: color-dodge;
       opacity: 0.6;
       fill: none;
