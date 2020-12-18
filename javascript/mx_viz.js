@@ -167,19 +167,12 @@
         var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
       }
       
-      // var L1_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+
+      const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+      const edge_stroke_scale_g12 = d3.scaleLinear().domain([0.000098,0.0045]).range([0,2]);
+      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0,2]);
     
-    
-      // d3.select("#color-dropdown").text("first");
-    
-      // layer_data = Object.getOwnPropertyNames(graph.nodes[0])
-      // d3.select("#color-dropdown").selectAll("option")
-      //   .data(layer_data)
-      //   .enter()
-      //     .append("option")
-      //       .attr("value", function(d) {return d})
-      //       .text(function(d) {return d});
+
     
       d3.select("select")
         .on("change",function(d){
@@ -280,7 +273,22 @@
         .enter().append("path")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
           .attr("class", edge_class)
-          .attr("stroke-width", function(d) {console.log(d.weight); return 10*d.weight});
+          .attr("stroke-width", function(d) {
+              let this_layer = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
+              let stroke_width;
+              if (this_layer === 2) {
+
+                stroke_width = edge_stroke_scale_g3(d.weight);
+                
+              } else {
+
+                stroke_width = edge_stroke_scale_g12(d.weight);
+                
+              }
+
+              return stroke_width});
+
+      console.log(graph.nodes)
     
     
     
