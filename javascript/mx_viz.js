@@ -223,8 +223,36 @@
             let d_path;
             if (edge_class(d) === "intra-layer") {
 
+              // Then we need to calculate a quatratic bezier curve from node1 to node2
+              // Our curve parameters will depend on the location of nodes1 and 2.
+              const k = 20;
+              let xm;
+              let ym;
+
+              if (x2 >= x1 && y2 >= y1) {
+
+                xm = x1 + k
+                ym = y1 + k
+                
+              } else if (x2 >= x1 && y2 < y1) {
+
+                xm = x1 + k
+                ym = y1 - k
+                
+              } else if (x2 < x1 && y2 >= y1) {
+
+                xm = x1 - k
+                ym = y1 + k
+
+              } else if (x2 < x1 && y2 < y1) {
+
+                xm = x1 - k
+                ym = y1 - k
+
+              }
+
               d_path = `M ${x1},${y1} 
-                   Q ${x1+20},${y1+20},${x2},${y2}`;
+                   Q ${xm},${ym},${x2},${y2}`;
 
             } else {
 
