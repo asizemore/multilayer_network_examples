@@ -126,7 +126,7 @@
     
     .nodes_strokes {
       stroke: white;
-      stroke-width: 0.9;
+      stroke-width: 0.5;
       fill: none;
       mix-blend-mode: lighten;
       z-index: -1;

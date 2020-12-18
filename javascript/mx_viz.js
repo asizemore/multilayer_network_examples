@@ -123,7 +123,7 @@
     // Define necessary functions for nodes
     
     
-      var node_radius = 6;
+      var node_radius = 4;
     
       if (nLayers < 5) {
     
