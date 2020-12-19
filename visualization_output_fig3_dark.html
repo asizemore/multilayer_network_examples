@@ -114,6 +114,8 @@
       mix-blend-mode: color-dodge;
       opacity: 0.8;
       fill: none;
+      /* marker-end: url(#arrow); */
+      /* markerHeight: 50; */
     }
     
     .boxes {
@@ -10560,7 +10562,9 @@
                 
               }
 
-              return stroke_width});
+              return stroke_width})
+          .attr("marker-end", "url(#arrow)")
+          .attr("markerHeight", 20);
 
       console.log(graph.nodes)
     

@@ -314,7 +314,9 @@
                 
               }
 
-              return stroke_width});
+              return stroke_width})
+          .attr("marker-end", "url(#arrow)")
+          .attr("markerHeight", 20);
 
       console.log(graph.nodes)
     
