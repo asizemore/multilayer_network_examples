@@ -229,7 +229,16 @@
                   dy = y2 - y1,
                   dr = Math.sqrt(dx*dx + dy*dy);
 
-              d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
+                  if (dr < 2*node_radius + 2) {
+
+
+                    d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + x2 + "," + y2;
+                    
+                  } else {
+          
+                    d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
+                    
+                  }
 
             } else {
 
@@ -303,7 +312,7 @@
 
       function edge_line_2(d) {
 
-        console.log(this)
+
 
         // length of current path
         let pl = this.getTotalLength(),
@@ -314,15 +323,27 @@
         
         // Get coordinates of nodes
         const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
+        const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
         const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
         const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
 
 
         var dx = m.x - x1,
             dy = m.y - y1,
             dr = Math.sqrt(dx * dx + dy * dy);
 
-        return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+        if (dr < 2*node_radius + 2) {
+          console.log(d.source)
+          console.log(d.target)
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + m.x + "," + m.y;
+          
+        } else {
+
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+          
+        }
+
 
       }
     
@@ -416,6 +437,9 @@
         // Recalculate edge postitions
         d3.selectAll(".intra-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+
+        d3.selectAll(".intra-layer")
+          .attr("d", edge_line_2);
     
         d3.selectAll(".inter-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
