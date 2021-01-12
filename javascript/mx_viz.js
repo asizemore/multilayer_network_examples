@@ -223,36 +223,13 @@
             let d_path;
             if (edge_class(d) === "intra-layer") {
 
-              // Then we need to calculate a quatratic bezier curve from node1 to node2
-              // Our curve parameters will depend on the location of nodes1 and 2.
-              const k = 20;
-              let xm;
-              let ym;
+            // This beautiful solution found at https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph
 
-              if (x2 >= x1 && y2 >= y1) {
+              let dx = x2 - x1,
+                  dy = y2 - y1,
+                  dr = Math.sqrt(dx*dx + dy*dy);
 
-                xm = x1 + k
-                ym = y1 + k
-                
-              } else if (x2 >= x1 && y2 < y1) {
-
-                xm = x1 + k
-                ym = y1 - k
-                
-              } else if (x2 < x1 && y2 >= y1) {
-
-                xm = x1 - k
-                ym = y1 + k
-
-              } else if (x2 < x1 && y2 < y1) {
-
-                xm = x1 - k
-                ym = y1 - k
-
-              }
-
-              d_path = `M ${x1},${y1} 
-                   Q ${xm},${ym},${x2},${y2}`;
+              d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
 
             } else {
 
@@ -260,6 +237,7 @@
                    L ${x2},${y2}`;
 
             }
+
             return d_path;
           }
     
@@ -314,11 +292,39 @@
                 
               }
 
-              return stroke_width})
-          .attr("marker-end", "url(#arrow)")
-          .attr("markerHeight", 20);
+              return stroke_width});
+
+      // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
+      link.filter(d => edge_class(d) === "intra-layer")
+        .attr("d",edge_line_2)
+        .attr("marker-end", "url(#arrow)");
 
       console.log(graph.nodes)
+
+      function edge_line_2(d) {
+
+        console.log(this)
+
+        // length of current path
+        let pl = this.getTotalLength(),
+        // radius of circle plus marker head
+        r = node_radius + 2, //12 is the "size" of the marker Math.sqrt(12**2 + 12 **2)
+        // position close to where path intercepts circle	
+        m = this.getPointAtLength(pl - r);    
+        
+        // Get coordinates of nodes
+        const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
+        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
+        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+
+
+        var dx = m.x - x1,
+            dy = m.y - y1,
+            dr = Math.sqrt(dx * dx + dy * dy);
+
+        return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+
+      }
     
     
     

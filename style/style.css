@@ -127,6 +127,7 @@
     }
     
     .nodes_strokes {
+      /* stroke: rgb(1, 7, 9); */
       stroke: white;
       stroke-width: 0.5;
       fill: none;

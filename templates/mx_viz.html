@@ -6,7 +6,7 @@
     <style>{{ css_text }}</style>
 </head>
 
-<body style="background-color:rgb(1, 7, 9)"5>
+<body style="background-color:rgb(1, 7, 9)">
 
   <div id="header">
     <h1> Multilayer network </h1>
@@ -19,7 +19,13 @@
 
 
     <div id="svgdiv-mx">
-      <svg width="800" height="900" id="svg-mx"></svg>
+      <svg width="800" height="900" id="svg-mx">
+        <defs>
+          <marker id="arrow" markerWidth="5" markerHeight="5" refX="3" refY="2" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,4 L3,2 z" fill="#f00" />
+          </marker>
+        </defs>
+      </svg>
     </div>
 
 
