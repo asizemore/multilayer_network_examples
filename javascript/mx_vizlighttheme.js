@@ -12,9 +12,9 @@
     // Change filename here
     // d3.json("data/mx_2layers2.json", function(error, graph) {
     //   if (error) throw error;
-
     var graph = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
     console.log(graph)
+    console.log("hello")
 
     
     
@@ -24,7 +24,7 @@
     
       var nNodes = nodes_in_L1[1]+1;
 
-
+      var nNodes_total = d3.extent(graph.nodes, function(d) {return d.id})[1]
     
     
       // Get number of layers
@@ -123,7 +123,7 @@
     // Define necessary functions for nodes
     
     
-      var node_radius = 6;
+      var node_radius = 4;
     
       if (nLayers < 5) {
     
@@ -144,7 +144,7 @@
         .range([150, widthmx-150])
     
     
-      var box_buffer = 0.2;
+      var box_buffer = 0.1;
       var nodes_extent = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
       var extent_buffer = 0.01 
       x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
@@ -153,9 +153,7 @@
     
       console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
     
-    //   var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
-      var node_colors = ["#0066bd", "#86c25a", "#cba04d", "#ae80d0", "#47d6d6"]
-      shuffle(node_colors)
+      var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
     
       if (nLayers < 6) {
         var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
@@ -169,19 +167,13 @@
         var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
       }
       
-      // var L1_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+
+      const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+      const edge_stroke_scale_g12 = d3.scaleLinear().domain([0.000098,0.0045]).range([0,2]);
+      // const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.5,1]);
+      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0,0.086]).range([0.5,1]);
     
-    
-      // d3.select("#color-dropdown").text("first");
-    
-      // layer_data = Object.getOwnPropertyNames(graph.nodes[0])
-      // d3.select("#color-dropdown").selectAll("option")
-      //   .data(layer_data)
-      //   .enter()
-      //     .append("option")
-      //       .attr("value", function(d) {return d})
-      //       .text(function(d) {return d});
+
     
       d3.select("select")
         .on("change",function(d){
@@ -217,7 +209,7 @@
             }
     
           }
-          // console.log(d3.scaleLinear(graph.nodes[selected]));
+
         })
     
     // functions and info for edges
@@ -228,9 +220,43 @@
             const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
             const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
             const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
-    
-    
-            return `M ${x1},${y1} L ${x2},${y2}`;
+
+            let d_path;
+            if (edge_class(d) === "intra-layer") {
+
+              // If the edge is within either undirected graph (L2 = 0, 1), make it a line
+              if (source_node.L2 === 2) {
+
+                // This beautiful solution adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph
+
+                let dx = x2 - x1,
+                    dy = y2 - y1,
+                    dr = Math.sqrt(dx*dx + dy*dy);
+
+                if (dr < 2*node_radius + 2) {
+
+
+                  d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + x2 + "," + y2;
+                  
+                } else {
+        
+                  d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
+                  
+                }
+
+
+              } else {
+                d_path = "M" + x1 + "," + y1 + "L" + x2 + "," + y2;
+              }
+
+            } else {
+
+              d_path = `M ${x1},${y1} 
+                   L ${x2},${y2}`;
+
+            }
+
+            return d_path;
           }
     
       function edge_class(d) {
@@ -249,15 +275,6 @@
     
     
       // Draw!!
-
-
-    var link = svgmx.append("g")
-      .selectAll("line")
-      .data(graph.links)
-      .enter().append("path")
-        .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
-        .attr("class", edge_class);
-  
     
       var boxes = svgmx.append("g")
     
@@ -274,6 +291,69 @@
         }
     
     
+      var link = svgmx.append("g")
+        .selectAll("line")
+        .data(graph.links)
+        .enter().append("path")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
+          .attr("class", edge_class)
+          .attr("stroke-width", function(d) {
+              let this_layer = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
+              let stroke_width;
+              if (this_layer === 2) {
+
+                stroke_width = edge_stroke_scale_g3(d.weight);
+                
+              } else {
+
+                stroke_width = edge_stroke_scale_g12(d.weight);
+                
+              }
+
+              return stroke_width});
+
+      // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
+      link.filter(d => {edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2})
+        .attr("d",edge_line_2);
+        // .attr("marker-end", "url(#arrow)");
+
+      console.log(graph.nodes)
+
+      function edge_line_2(d) {
+
+
+
+        // length of current path
+        let pl = this.getTotalLength(),
+        // radius of circle plus marker head
+        r = node_radius + 2, //12 is the "size" of the marker Math.sqrt(12**2 + 12 **2)
+        // position close to where path intercepts circle	
+        m = this.getPointAtLength(pl - r);    
+        
+        // Get coordinates of nodes
+        const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
+        const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
+        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
+        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
+
+
+        var dx = m.x - x1,
+            dy = m.y - y1,
+            dr = Math.sqrt(dx * dx + dy * dy);
+
+        if (dr < 2*node_radius + 2) {
+
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + m.x + "," + m.y;
+          
+        } else {
+
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+          
+        }
+
+
+      }
     
     
     
@@ -362,7 +442,15 @@
           .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
           .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
     
+        // Recalculate edge postitions
+        d3.selectAll(".intra-layer")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
 
+        d3.selectAll(".intra-layer")
+          .attr("d", edge_line_2);
+    
+        d3.selectAll(".inter-layer")
+          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
     
         // Recalculate box postitions
         for (i=nLayers-1; i>-1; i--) {
@@ -371,13 +459,6 @@
             // .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
             // .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
         }
-
-        // Recalculate edge postitions
-        d3.selectAll(".intra-layer")
-            .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
-      
-         d3.selectAll(".inter-layer")
-            .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
     
     
     
@@ -416,7 +497,7 @@
         //
         // // Edge weight colormap
         //
-        var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0].reverse());
+        var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0]);
         console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
         //
         var svgsadj= d3.select("#svg-sadj"),
@@ -426,12 +507,12 @@
         svgsadj.attr("class", "svg_class")
     
         var y_scale2 = d3.scaleLinear()
-          .range([25, heightsadj-25])
+          .range([20, heightsadj-20])
     
         y_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }));
     
         var x_scale2 = d3.scaleLinear()
-          .range([25, widthsadj-25]);
+          .range([20, widthsadj-20]);
         x_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }))
     
         var rect_r = (widthsadj-40)/graph.nodes.length;
@@ -439,13 +520,12 @@
     
         // draw box for heatmap
         svgsadj.append("rect")
-          .attr("x", 25)
-          .attr("y", 25)
-          .attr("height", heightsadj-50 + rect_r)
-          .attr("width", widthsadj-50+ rect_r)
-          .style("stroke", "black")
+          .attr("x", 20)
+          .attr("y", 20)
+          .attr("height", heightsadj-40 + rect_r)
+          .attr("width", widthsadj-40+ rect_r)
+          .style("stroke", "white")
           .style("stroke-width", 0.25)
-          .style("fill", "white")
     
     
     
@@ -550,26 +630,6 @@
           row_highlight
             .style("opacity", 0);
         }
-
-
-        function shuffle(array) {
-            var currentIndex = array.length, temporaryValue, randomIndex;
-          
-            // While there remain elements to shuffle...
-            while (0 !== currentIndex) {
-          
-              // Pick a remaining element...
-              randomIndex = Math.floor(Math.random() * currentIndex);
-              currentIndex -= 1;
-          
-              // And swap it with the current element.
-              temporaryValue = array[currentIndex];
-              array[currentIndex] = array[randomIndex];
-              array[randomIndex] = temporaryValue;
-            }
-          
-            return array;
-          }
     
     
     

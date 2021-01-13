@@ -16,6 +16,10 @@
       margin-bottom: 30px;
       font-weight: lighter;
     }
+
+    svg marker {
+      fill:rgb(143, 144, 146);
+    }
     
     #header h1 {
       margin: auto;
@@ -89,7 +93,7 @@
       grid-auto-rows: 1fr;
       grid-column-gap: 10px;
       width:100%;
-      height: 700px;
+      height: 1000px;
     
     
     }
@@ -105,8 +109,8 @@
     
     .intra-layer {
       stroke: rgb(143, 144, 146);
-      stroke-width: 1px;
-      opacity: 0.8;
+      /* stroke-width: 1px; */
+      /* opacity: 0.8; */
       fill: none;
     }
     
