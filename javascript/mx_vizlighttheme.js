@@ -170,8 +170,8 @@
 
       const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
       const edge_stroke_scale_g12 = d3.scaleLinear().domain([0.000098,0.0045]).range([0,2]);
-      // const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.5,1]);
-      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0,0.086]).range([0.5,1]);
+      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.1,2]);
+      // const edge_stroke_scale_g3 = d3.scaleLinear().domain([0,0.086]).range([0.5,1]);
     
 
     
@@ -313,11 +313,11 @@
               return stroke_width});
 
       // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
-      link.filter(d => {edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2})
+      link.filter(d => edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)
         .attr("d",edge_line_2);
         // .attr("marker-end", "url(#arrow)");
 
-      console.log(graph.nodes)
+
 
       function edge_line_2(d) {
 
@@ -446,8 +446,8 @@
         d3.selectAll(".intra-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
 
-        d3.selectAll(".intra-layer")
-          .attr("d", edge_line_2);
+        d3.selectAll(".intra-layer").filter(d => graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)
+          .attr("d",edge_line_2);
     
         d3.selectAll(".inter-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
