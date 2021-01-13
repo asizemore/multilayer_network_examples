@@ -18838,7 +18838,8 @@
       
 
       const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      const edge_stroke_scale_g12 = d3.scaleLinear().domain([0.000098,0.0045]).range([0,2]);
+      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000098,0.0045]).range([0.1,2]);
+      const edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.1,2]);
       const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.1,2]);
       // const edge_stroke_scale_g3 = d3.scaleLinear().domain([0,0.086]).range([0.5,1]);
     
@@ -18973,10 +18974,14 @@
 
                 stroke_width = edge_stroke_scale_g3(d.weight);
                 
+              } else if (this_layer === 1) {
+
+                stroke_width = edge_stroke_scale_g2(d.weight);
+                
               } else {
 
-                stroke_width = edge_stroke_scale_g12(d.weight);
-                
+                stroke_width = edge_stroke_scale_g1(d.weight);
+
               }
 
               return stroke_width});
