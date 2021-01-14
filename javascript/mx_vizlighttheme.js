@@ -169,7 +169,7 @@
       
 
       const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000098,0.0045]).range([0.05,3]);
+      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000153,0.0045]).range([0.05,3]);
       const edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.05,3]);
       const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]);
       const edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]);

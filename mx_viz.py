@@ -211,3 +211,81 @@ def visualize_timeseries(
 
     return template
 
+
+# Updated function for writing a supra-adjacency (possibly directed) matrix.
+def write_supraadj_to_json(filename, sadj, nNodes, pos, nLayers, nodes_to_remove = []):
+    
+    # filename the complete name of the output file (data/slide_x.json)
+    # sadj the multilayer network as a supra-adjacency matrix
+    # nNodes the number of nodes in the first layer
+    # pos a dictionary of node coordinates
+    # nLayers the number of layers in the second aspect.
+    # nodes_to_remove is a list of nodes that should not exist in each layer. Default = []
+    
+
+    # Remove nodes from sadj
+    sadj.remove_nodes_from(nodes_to_remove)
+
+    # Recreate the graph G to make the rest work nicely.
+
+    G = nx.from_numpy_array(nx.adjacency_matrix(sadj).todense(), create_using = nx.DiGraph)
+
+
+    # Create dictionaries pretending like all nodes exist
+    scalefact = 20
+    L2_classes = np.arange(nLayers)
+    L2_array_original = np.array([])
+    z_shift = 2
+    z_array_original = np.array([])
+    x_orig = np.array([])
+    y_orig = np.array([])
+    L1_orig = np.array([])
+    for level in L2_classes:
+        L2_array_original = np.concatenate((L2_array_original, np.array([float(level) for i in np.arange(nNodes)])))
+        z_array_original = np.concatenate((z_array_original, np.array([float(level*z_shift) for i in np.arange(nNodes)])))
+        x_orig = np.concatenate((x_orig, [pos[key][0]+scalefact for key in pos]))
+        y_orig = np.concatenate((y_orig, [pos[key][1]+scalefact for key in pos]))
+        L1_orig = np.concatenate((L1_orig, [i for i in np.arange(nNodes)]))
+
+    # Need to delete nodes from our attribute dictionaries, too
+    L2_array = np.delete(L2_array_original, nodes_to_remove, 0)
+    z_array = np.delete(z_array_original, nodes_to_remove, 0)
+    x_array = np.delete(x_orig, nodes_to_remove, 0)
+    y_array = np.delete(y_orig, nodes_to_remove, 0)
+    L1_array = np.delete(L1_orig, nodes_to_remove, 0)
+
+    ## Each node will get attributes L1=node id, L2=slice number, x position, y position, and name/id
+
+    id_dict = {i:("id"+str(i)) for i in np.arange(nNodes*nLayers)}
+    x_dict = {}
+    y_dict = {}
+    L2_dict = {i:l2 for i,l2 in enumerate(L2_array)}
+    z_dict = {i:z_val for i,z_val in enumerate(z_array)}
+    x_dict = {i:x_val for i,x_val in enumerate(x_array)}
+    y_dict = {i:y_val for i,y_val in enumerate(y_array)}
+    L1_dict = {i:L1_val for i,L1_val in enumerate(L1_array)}
+
+
+    nx.set_node_attributes(G, id_dict, name = "name")
+    nx.set_node_attributes(G, x_dict, name = "x")
+    nx.set_node_attributes(G, y_dict, name = "y")
+    nx.set_node_attributes(G, z_dict, name = "z")
+    nx.set_node_attributes(G, L1_dict, name= "L1")
+    nx.set_node_attributes(G, L2_dict, name= "L2")
+
+
+    G_json = json_graph.node_link_data(G)
+    
+    # Write for visualization function
+    G_json_viz = json.dumps(G_json, indent = 4)  
+    
+    # To save as a .json file
+    with open(filename, 'w') as fp:
+        json.dump(G_json, fp)
+
+    print(f"done writing mx to {filename}")
+    
+    return G_json_viz
+
+
+
