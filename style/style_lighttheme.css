@@ -122,7 +122,6 @@
     }
     
     .nodes_circles {
-      /* Something weird is going on with these TODO */
       stroke: none;
       z-index: 1;
     }
@@ -138,6 +137,6 @@
     .highlights {
       stroke: white;
       fill: none;
-      mix-blend-mode: exclusion;
+      mix-blend-mode:screen;
       stroke-width: 1px;
     }

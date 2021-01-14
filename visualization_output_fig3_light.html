@@ -127,7 +127,6 @@
     }
     
     .nodes_circles {
-      /* Something weird is going on with these TODO */
       stroke: none;
       z-index: 1;
     }
@@ -143,7 +142,7 @@
     .highlights {
       stroke: white;
       fill: none;
-      mix-blend-mode: exclusion;
+      mix-blend-mode:screen;
       stroke-width: 1px;
     }
 </style>
@@ -18701,9 +18700,6 @@ const node_radius = 4,  // Size of nodes
     edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]),     // Scale stroke width for intra-layer edges in g3
     edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]),    // Scale stroke width for inter-layer edges between g1 and g2
     edge_stroke_scale_g2g3 = d3.scaleLinear().domain([2963, 5078]).range([0.5, 3]);       // Scale stroke width for inter-layer edges between g2 and g3
-
-
-
 
 
 // Load graph
