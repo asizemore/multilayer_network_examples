@@ -169,10 +169,12 @@
       
 
       const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000098,0.0045]).range([0.1,2]);
-      const edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.1,2]);
-      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.1,2]);
-      // const edge_stroke_scale_g3 = d3.scaleLinear().domain([0,0.086]).range([0.5,1]);
+      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000098,0.0045]).range([0.05,3]);
+      const edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.05,3]);
+      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]);
+      const edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]);
+      const edge_stroke_scale_g2g3 = d3.scaleLinear().domain([2963, 5078]).range([0.5, 3]);
+
     
 
     
@@ -299,8 +301,12 @@
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
           .attr("class", edge_class)
           .attr("stroke-width", function(d) {
+            let stroke_width
+
+            if (edge_class(d) === "intra-layer") {
+
               let this_layer = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
-              let stroke_width;
+
               if (this_layer === 2) {
 
                 stroke_width = edge_stroke_scale_g3(d.weight);
@@ -315,12 +321,38 @@
 
               }
 
-              return stroke_width});
+            } else {
+
+              let source_L2 = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
+              let target_L2 = graph.nodes.filter(x => {return x.id == d.target})[0].L2;
+
+              if (source_L2 in [0, 1] && target_L2 in [0, 1]) {
+
+                
+                stroke_width = edge_stroke_scale_g1g2(d.weight);
+              } else if (source_L2 in [1, 2] && target_L2 in [1, 2]) {
+                console.log(source_L2,target_L2)
+                console.log(d.weight)
+
+                stroke_width = edge_stroke_scale_g2g3(d.weight);
+              } else {
+                stroke_width = 10;
+              }
+
+            }
+
+            return stroke_width});
+
+      console.log(link)
 
       // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
       link.filter(d => edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)
-        .attr("d",edge_line_2);
-        // .attr("marker-end", "url(#arrow)");
+        .attr("d",edge_line_2)
+        .attr("marker-end", "url(#arrow)");
+      
+      // Update links that are inter-layer so as to have a uniform stroke width
+      // link.filter(d => edge_class(d) === "inter-layer")
+      //   .attr("stroke-width", 0.5);
 
 
 

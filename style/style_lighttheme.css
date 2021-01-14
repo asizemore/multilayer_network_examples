@@ -101,7 +101,7 @@
     
     .inter-layer {
       stroke: rgb(109, 110, 110);
-      stroke-width: 0.5px;
+      /* stroke-width: 0.5px; */
       mix-blend-mode: darken;
       opacity: 0.6;
       fill: none;
