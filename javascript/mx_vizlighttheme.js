@@ -302,16 +302,18 @@
           .attr("class", edge_class)
           .attr("stroke-width", function(d) {
             let stroke_width
+            let source_L2 = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
+            let target_L2 = graph.nodes.filter(x => {return x.id == d.target})[0].L2;
+
 
             if (edge_class(d) === "intra-layer") {
 
-              let this_layer = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
 
-              if (this_layer === 2) {
+              if (source_L2 === 2) {
 
                 stroke_width = edge_stroke_scale_g3(d.weight);
                 
-              } else if (this_layer === 1) {
+              } else if (source_L2 === 1) {
 
                 stroke_width = edge_stroke_scale_g2(d.weight);
                 
@@ -323,18 +325,16 @@
 
             } else {
 
-              let source_L2 = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
-              let target_L2 = graph.nodes.filter(x => {return x.id == d.target})[0].L2;
 
-              if (source_L2 in [0, 1] && target_L2 in [0, 1]) {
+              if ([0, 1].includes(source_L2) && [0, 1].includes(target_L2)) {
 
                 
                 stroke_width = edge_stroke_scale_g1g2(d.weight);
-              } else if (source_L2 in [1, 2] && target_L2 in [1, 2]) {
-                console.log(source_L2,target_L2)
-                console.log(d.weight)
+              } else if ([1, 2].includes(source_L2) && [1, 2].includes(target_L2)) {
+
 
                 stroke_width = edge_stroke_scale_g2g3(d.weight);
+
               } else {
                 stroke_width = 10;
               }
