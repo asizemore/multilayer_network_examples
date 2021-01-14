@@ -154,7 +154,7 @@
       console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
     
       // var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
-      const node_colors = ["#4b717f", "#659ca0", "#87c1bc"];
+      const node_colors = ["#232544", "#394960", "#516e7a"];
     
       if (nLayers < 4) {
         // TODO make node_colormap a direct map
