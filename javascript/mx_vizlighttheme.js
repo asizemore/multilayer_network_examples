@@ -153,15 +153,15 @@
     
       console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
     
-      var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
+      // var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
+      const node_colors = ["#4b717f", "#659ca0", "#87c1bc"];
     
-      if (nLayers < 6) {
+      if (nLayers < 4) {
+        // TODO make node_colormap a direct map
         var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
         console.log(node_colormap(0))
         console.log(node_colormap(1))
         console.log(node_colormap(2))
-        console.log(node_colormap(3))
-        console.log(node_colormap(4))
         console.log(node_colors)
       } else {
         var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
@@ -343,7 +343,6 @@
 
             return stroke_width});
 
-      console.log(link)
 
       // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
       link.filter(d => edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)

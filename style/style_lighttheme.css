@@ -17,9 +17,9 @@
       font-weight: lighter;
     }
 
-    svg marker {
+    /* svg marker {
       fill:rgb(143, 144, 146);
-    }
+    } */
     
     #header h1 {
       margin: auto;
@@ -100,7 +100,7 @@
     
     
     .inter-layer {
-      stroke: rgb(109, 110, 110);
+      stroke: #808284;
       /* stroke-width: 0.5px; */
       mix-blend-mode: darken;
       opacity: 0.6;
@@ -108,7 +108,7 @@
     }
     
     .intra-layer {
-      stroke: rgb(143, 144, 146);
+      stroke: #212c3d;
       /* stroke-width: 1px; */
       /* opacity: 0.8; */
       fill: none;
