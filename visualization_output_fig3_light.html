@@ -155,6 +155,7 @@
     <h1> Multilayer network </h1>
   </div>
 
+  <!-- Assign the data (mxgraph) from the python notebook to an element -->
   <div id="datadiv" data-mxgraph='{
     "directed": true,
     "multigraph": false,
@@ -18592,29 +18593,39 @@
         }
     ]
 }' style='display:none'></div>
+
+  <!-- Construct the divs for the two svgs -->
   <div id="svgs-div">
-
-
     <div id="svgdiv-mx">
+
+      <!-- Svg that holds the multilayer network -->
       <svg width="1000" height="900" id="svg-mx">
+
+        <!-- Define the arrowhead for directed edges -->
         <defs>
           <marker id="arrow" markerWidth="7" markerHeight="7" refX="2" refY="3" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L0,6 L3,3 z" />
           </marker>
         </defs>
+
       </svg>
+
     </div>
-
-
 
 
     <div id="svgdiv-sadj">
+
       <h2>supra-adjacency matrix</h2>
+
+      <!-- Svg that holds the supra-adjacency matrix -->
       <svg width="500" height="500" id="svg-sadj"></svg>
+
     </div>
 
-  </div>
+  </div> 
 
+
+  <!-- Construct the options row -->
   <div id="options" width=100 height=200>
     
     <div>
@@ -18645,6 +18656,7 @@
 
   </div>
 
+  <!-- Construct the footer -->
   <div id="footer">
 
     <button type="button" id="mx-button">Save mx</button>
@@ -18657,694 +18669,677 @@
 
 
 <!-- Load d3 and other helper scripts -->
-<!-- Tip: placing scripts at the bottom of body improves display speed -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
-<!-- <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script> -->
 <script>!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define("d3-save-svg",["exports"],t):t(e.d3_save_svg={})}(this,function(e){"use strict";function t(e,t){window.URL=window.URL||window.webkitURL;var n=new Blob(e.source,{type:"text/xml"}),i=window.URL.createObjectURL(n),o=document.body,r=document.createElement("a");o.appendChild(r),r.setAttribute("download",t+".svg"),r.setAttribute("href",i),r.style.display="none",r.click(),r.parentNode.removeChild(r),setTimeout(function(){window.URL.revokeObjectURL(i)},10)}function n(e){function t(e){var t,n,i,r,s=window.getComputedStyle(e),a="";for(t=0,n=s.length;n>t;t++)i=s[t],r=s.getPropertyValue(i),r!==o.getPropertyValue(i)&&"height"!==i&&"width"!==i&&(a+=i+":"+r+";");e.setAttribute("style",a)}function n(e){function t(e){if(e&&e.hasChildNodes())for(var i=e.firstChild;i;)1===i.nodeType&&"SCRIPT"!=i.nodeName&&(n.push(i),t(i)),i=i.nextSibling}var n=[];return n.push(e),t(e),n}var i=window.document.createElementNS(u.svg,"svg");window.document.body.appendChild(i);for(var o=window.getComputedStyle(i),r=n(e),s=r.length;s--;)t(r[s]);i.parentNode.removeChild(i)}function i(e){e.setAttribute("version","1.1"),e.removeAttribute("xmlns"),e.removeAttribute("xlink"),e.hasAttributeNS(u.xmlns,"xmlns")||e.setAttributeNS(u.xmlns,"xmlns",u.svg),e.hasAttributeNS(u.xmlns,"xmlns:xlink")||e.setAttributeNS(u.xmlns,"xmlns:xlink",u.xlink),n(e);var t=new XMLSerializer,i=t.serializeToString(e),o='<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',r=e.getBoundingClientRect(),s={top:r.top,left:r.left,width:r.width,height:r.height,"class":e.getAttribute("class"),id:e.getAttribute("id"),childElementCount:e.childElementCount,source:[o+i]};return s}function o(e){for(var t=new Uint8Array(e),n=t.length,i=[];n--;)i[n]=String.fromCharCode(t[n]);var o=window.btoa(i.join(""));return o}function r(e,t){var n,i=new XMLHttpRequest(e);i.open("GET",e,!0),i.responseType="arraybuffer",i.callback=t,i.onload=function(){n=o(this.response),this.callback(null,n)},i.onerror=function(){t("B64 ERROR",null)},i.send()}function s(e){var t=/^\s*data:([a-z]+\/[a-z0-9\-]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;return!!e.match(t)}function a(e,n){if("svg"!==e.nodeName||1!==e.nodeType)throw"Need an svg element input";var n=n||{},o=i(e,n),r=d(o),s=n.filename||r,o=i(e);t(o,s)}function l(e){var t=e.querySelectorAll("image");[].forEach.call(t,function(e){var t=e.getAttribute("href");s(t)||r(t,function(t,n){e.setAttributeNS(u.xlink,"href","data:image/png;base64,"+n)})})}function d(e){var t="untitled";return e.id?t=e.id:e["class"]?t=e["class"]:window.document.title&&(t=window.document.title.replace(/[^a-z0-9]/gi,"-").toLowerCase()),t}var u={svg:"http://www.w3.org/2000/svg",xhtml:"http://www.w3.org/1999/xhtml",xlink:"http://www.w3.org/1999/xlink",xml:"http://www.w3.org/XML/1998/namespace",xmlns:"http://www.w3.org/2000/xmlns/"},w="0.0.2";e.version=w,e.save=a,e.embedRasterImages=l});</script>
 <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
-
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-<script>// <!-- begin javascript -->
-// <!-- <script> -->
+<!-- Insert the javascript found in the associated file. -->
+<script>// This file originally modified from https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
 
-    // This file originally modified from https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
-    var svgmx= d3.select("#svg-mx"),
-        widthmx = +svgmx.attr("width"),
-        heightmx = +svgmx.attr("height");
-    
-    
-    svgmx.attr("class", "svg_class")
-    
-    // Change filename here
-    // d3.json("data/mx_2layers2.json", function(error, graph) {
-    //   if (error) throw error;
-    var graph = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
-    console.log(graph)
-    console.log("hello")
+// Extract constants from html elements and set attributes
+const SVGMX= d3.select("#svg-mx"),
+    WIDTHMX = +SVGMX.attr("width"),
+    HEIGHTMX = +SVGMX.attr("height"),
+    arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length,
+    SVGADJ= d3.select("#svg-sadj"),
+    WIDTHSADJ = +SVGADJ.attr("width"),
+    HEIGHTSADJ = +SVGADJ.attr("height");
 
-    
-    
-      // need to know how many nodes in layer 1
-      // Would be better to get the number of unique values in L1 ...
-      var nodes_in_L1 = d3.extent(graph.nodes, function(d) {return d.L1})
-    
-      var nNodes = nodes_in_L1[1]+1;
+SVGMX.attr("class", "svg_class")
+SVGADJ.attr("class", "svg_class")
 
-      var nNodes_total = d3.extent(graph.nodes, function(d) {return d.id})[1]
-    
-    
-      // Get number of layers
-      // Would be better to get the number of unique values in L2.
-      var nLayers = d3.extent(graph.nodes, function(d) {return d.L2})[1]+1
-    
-      // Get coordinates of the first layer of nodes
-      x_pos = [];
-      y_pos = [];
-    
-      for (i = 0; i < nNodes; i++) {
-        x_pos.push(graph.nodes[i].x);
-        y_pos.push(graph.nodes[i].y)
-      }
-    
-      // Define the center of our box
-    
-      const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
-      box_center=[arrAvg(x_pos), arrAvg(y_pos)]
-    
-      // find the max x and y distances from box_center to any point
-      var diffsx = [];
-      var diffsy = [];
-      for (i=0; i < nNodes; i++) {
-        diffsx.push(Math.abs(box_center[0] - graph.nodes[i].x))
-        diffsy.push(Math.abs(box_center[1] - graph.nodes[i].y))
-      }
-      box_radiusx = Math.max(...diffsx)
-      box_radiusy = Math.max(...diffsy)
-    
-      var xs = [];
-      var ys = [];
-      for (i=0; i< nNodes; i++) {
-        xs.push(graph.nodes[i].x)
-        ys.push(graph.nodes[i].y)
-      }
-    
-      // Set the box buffer
-    
-      boxspan_x = [Math.min(...xs), Math.max(...xs)]
-      boxspan_y = [Math.min(...ys), Math.max(...ys)]
-      console.log(boxspan_x,boxspan_y)
-    
-    
-    
-      // Projection functions
-      var x_0 = 10;
-      var y_0 = -5;
-      var tilt = 200;
-    
-    
-      function project_x(x_coord, y_coord, z_coord, d_project, x_0, tilt) {
-        // x_proj = x_coord*Math.cos(2*Math.PI*(alpha/360)) // cos takes radians
-        // first from python to 3d using OP
-        x_3d = y_coord;
-        z_3d = x_coord + d_project;
-    
-        // next project from 3d to 2d window
-        x_proj = x_0 + (x_3d-x_0)*(d_project/z_3d)
-        return x_proj
-      }
-    
-      function project_y(x_coord, y_coord, z_coord, d_project, y_0, tilt) {
-        // y_proj = y_coord*Math.sin(2*Math.PI*(alpha/360)) + l_v;
-        // first from python to 3d using //
-        y_3d = tilt;
-        z_3d = x_coord + d_project;
-    
-        // next project from 3d to 2d
-        y_proj = (-1)*(y_0 + (y_3d-y_0)*(d_project/z_3d)) + z_coord
-    
-        return y_proj
-      }
-    
-      var d_project = 1, l_v = 1
-      // Define box path
-      function box_path(boxspan_x, boxspan_y, box_buffer, layer, x_0, y_0, d_project, tilt) {
-    
-        // need to project, then scale the projection
-            var z_value = graph.nodes.filter(function(n){return n.L2 == layer;})[0].z
-    
-    
-            const x1p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
-            const y1p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
-            const x2p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
-            const y2p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
-            const x3p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
-            const y3p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
-            const x4p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
-            const y4p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
-            //
-    
-            return `M ${x1p},${y1p} L ${x2p},${y2p} L ${x3p} ${y3p} L ${x4p} ${y4p} L ${x1p} ${y1p}`;
-          }
-    
-    // Define necessary functions for nodes
-    
-    
-      var node_radius = 4;
-    
-      if (nLayers < 5) {
-    
-        var y_scale = d3.scaleLinear()
-          .range([50 + 30*(5-nLayers), heightmx-50 - 30*(5-nLayers)])
-    
-    
-      } else {
-    
-        var y_scale = d3.scaleLinear()
-          .range([50, heightmx-50])
-      }
-    
-      y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
-    
-    
-      var x_scale = d3.scaleLinear()
-        .range([150, widthmx-150])
-    
-    
-      var box_buffer = 0.1;
-      var nodes_extent = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
-      var extent_buffer = 0.01 
-      x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
-      console.log([nodes_extent[0] - extent_buffer, nodes_extent[1]])
-      // need to define extent first then subtract cause im not projecting rn
-    
-      console.log(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }))
-    
-      // var node_colors = ["#58c3be","#7dbf6d","#d95f02", "#cc0062","#6f08a5"];
-      const node_colors = ["#232544", "#394960", "#516e7a"];
-    
-      if (nLayers < 4) {
-        // TODO make node_colormap a direct map
-        var node_colormap = d3.scaleOrdinal(node_colors).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-        console.log(node_colormap(0))
-        console.log(node_colormap(1))
-        console.log(node_colormap(2))
-        console.log(node_colors)
-      } else {
-        var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
-      }
-      
+// Parameters ---- feel free to experiment with these!
+const node_radius = 4,  // Size of nodes
+    box_buffer = 0.1,   // Controls amount of buffer between network extremes and box
+    extent_buffer = 0.01,   // Controls buffer for node placements
+    layer_colors = ["#232544", "#394960", "#516e7a"],    // Colors for layers (in order)
+    edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000153,0.0045]).range([0.05,3]),    // Scale stroke width for intra-layer edges in g1
+    edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.05,3]),    // Scale stroke width for intra-layer edges in g2
+    edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]),     // Scale stroke width for intra-layer edges in g3
+    edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]),    // Scale stroke width for inter-layer edges between g1 and g2
+    edge_stroke_scale_g2g3 = d3.scaleLinear().domain([2963, 5078]).range([0.5, 3]);       // Scale stroke width for inter-layer edges between g2 and g3
 
-      const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      const edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000153,0.0045]).range([0.05,3]);
-      const edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.05,3]);
-      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]);
-      const edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]);
-      const edge_stroke_scale_g2g3 = d3.scaleLinear().domain([2963, 5078]).range([0.5, 3]);
+
+
+
+
+// Load graph
+const GRAPH = JSON.parse(document.getElementById("datadiv").dataset.mxgraph);
+  
+// Check how we did at loading
+console.log("hello")
+console.log(GRAPH)
+
+// Calculate number of nodes within one layer and the whole network - Would be better to get the number of unique values in L1 ...
+const nodes_in_L1 = d3.extent(GRAPH.nodes, function(d) {return d.L1})
+const nNodes = nodes_in_L1[1]+1;
+const nNodes_total = d3.extent(GRAPH.nodes, function(d) {return d.id})[1]
+  
+// Get number of layers - Would be better to get the number of unique values in L2...
+const nLayers = d3.extent(GRAPH.nodes, function(d) {return d.L2})[1]+1;
+
+const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(GRAPH.nodes, function(d) {return d.L1}));   // Colormap for coloring by L1
+const edge_colormap_sadj = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(GRAPH.links, function(d) {return d.weight})[1], 0]); // Colormap for the sadj
+
+// Retreive coordinates of the first layer of nodes
+x_pos = [];
+y_pos = [];
+
+for (i = 0; i < nNodes; i++) {
+  x_pos.push(GRAPH.nodes[i].x);
+  y_pos.push(GRAPH.nodes[i].y)
+}
+  
+
+//// Box border calculations
+
+// Define the box centers
+const box_center=[arrAvg(x_pos), arrAvg(y_pos)];
+
+// Calculate the box radius (distance from center to corner) using max x and y distances from box_center to any point
+let diffsx = [],
+    diffsy = [];
+
+for (i=0; i < nNodes; i++) {
+  diffsx.push(Math.abs(box_center[0] - GRAPH.nodes[i].x))
+  diffsy.push(Math.abs(box_center[1] - GRAPH.nodes[i].y))
+}
+const box_radiusx = Math.max(...diffsx),
+    box_radiusy = Math.max(...diffsy);
+
+// Set the box buffer
+const boxspan_x = [Math.min(...x_pos), Math.max(...x_pos)],
+    boxspan_y = [Math.min(...y_pos), Math.max(...y_pos)];
+
+
+
+//// Projection
+
+// Parameters for projections
+let x_0 = 10,
+    y_0 = -5,
+    tilt = 200,
+    d_project = 1,
+    l_v = 1;
+
+  
+    
+//// Scales
+
+// x_scale, y_scale will take the node coordinates (or a transform of them) and scale them so that they will appropriately fill the svg.
+let y_scale = d3.scaleLinear().range([50 + 30*(5-nLayers), HEIGHTMX-50 - 30*(5-nLayers)]),
+    x_scale = d3.scaleLinear().range([150, WIDTHMX-150]);
+  
+y_scale.domain(d3.extent(GRAPH.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+
+// node_extent helps to calculate a projection-specific domain for x_scale.
+let nodes_extent = d3.extent(GRAPH.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
+x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
+
+// scales for the sadj svg
+let y_scale2 = d3.scaleLinear()
+        .range([20, HEIGHTSADJ-20])
+  
+y_scale2.domain(d3.extent(GRAPH.nodes, function(d) {return d.id; }));
+  
+let x_scale2 = d3.scaleLinear()
+        .range([20, WIDTHSADJ-20]);
+x_scale2.domain(d3.extent(GRAPH.nodes, function(d) {return d.id; }))
+  
+// radius for each box of the heatmap
+let rect_r = (WIDTHSADJ-40)/GRAPH.nodes.length;
 
     
 
-    
-      d3.select("select")
-        .on("change",function(d){
-          var selected = d3.select("#color-dropdown").node().value;
-          // color = {
-          //   return d => color_scale();
-          // }
-    
-          if (selected == "L1"){
-            node.selectAll("circle")
-              .attr("fill",function(d) {return L1_colormap(d[selected])})
-              .style("mix-blend-mode", "none")
-    
-            d3.selectAll(".boxes")
-              .attr("fill", "white")
-              .attr("stroke", "white")
-              .style("fill-opacity", 0.04)
-              .style("stroke-opacity", 0.2)
-    
-            
-          }
-    
-          if (selected == "L2"){
-            node.selectAll("circle")
-              .attr("fill", function(d) {return node_colormap(d[selected])});
-    
-            for (i=nLayers-1; i>-1; i--) {
-              d3.selectAll(`#box${i}`)
-                .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-                .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-                .style("fill-opacity", 0.1)
-                .style("stroke-opacity", 0.5)
-            }
-    
-          }
+//// Draw multilayer network
+  
 
-        })
-    
-    // functions and info for edges
-      function edge_line(d, x_0, y_0, d_project, tilt) {
-            const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
-            const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
-            const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
-            const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
-            const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
-            const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
+// Draw border boxes first (so that they are in the back of the figure)
+let boxes = SVGMX.append("g");
+  
+  
+// Attach data to each layer
+for (i=nLayers-1; i>-1; i--) {
 
-            let d_path;
-            if (edge_class(d) === "intra-layer") {
+  boxes.append("path")
+    .attr("d",box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt))
+    .attr("class", "boxes")
+    .attr("id", `box${i}`)
+    .attr("fill", function(d) {return layer_colors[GRAPH.nodes.filter(function(n){return n.L2 == i;})[0].L2]})
+    .attr("stroke", function(d) {return layer_colors[GRAPH.nodes.filter(function(n){return n.L2 == i;})[0].L2]});
 
-              // If the edge is within either undirected graph (L2 = 0, 1), make it a line
-              if (source_node.L2 === 2) {
-
-                // This beautiful solution adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph
-
-                let dx = x2 - x1,
-                    dy = y2 - y1,
-                    dr = Math.sqrt(dx*dx + dy*dy);
-
-                if (dr < 2*node_radius + 2) {
+}
 
 
-                  d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + x2 + "," + y2;
-                  
-                } else {
-        
-                  d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
-                  
-                }
+// Draw edges
+let link = SVGMX.append("g")
+      .selectAll("line")
+      .data(GRAPH.links)
+      .enter().append("path")
+        .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
+        .attr("class", edge_class)
+        .attr("stroke-width", get_stroke_width);
+
+// Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-GRAPH)
+link.filter(d => edge_class(d) === "intra-layer" && get_source_node(d).L2 === 2)
+  .attr("d",edge_line_2)  // edge_line_2 crops off the last bit of the line so there is room for the arrow
+  .attr("marker-end", "url(#arrow)");
 
 
-              } else {
-                d_path = "M" + x1 + "," + y1 + "L" + x2 + "," + y2;
-              }
+// Draw nodes
+// Attach data to nodes
+let node = SVGMX.append("g")
+  .attr("class","nodes")
+  .selectAll("g")
+  .data(GRAPH.nodes)
+  .enter().append("g")
+  .on("mouseover", mouseover)
+  .on("mouseout", mouseout);
 
-            } else {
+// Draw the node circle
+node.append("circle")
+  .attr("r", node_radius)
+  .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
+  .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
+  .attr("fill", function(d) {console.log(d.L2); return layer_colors[d.L2]})
+  .attr("class", "nodes_circles")
+  .attr("id", function(d) {return d.id});
 
-              d_path = `M ${x1},${y1} 
-                   L ${x2},${y2}`;
+// Draw the node strokes (easier to modify opacity settings as a separate object)
+node.append("circle")
+  .attr("r", node_radius)
+  .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
+  .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
+  .attr("class", "nodes_strokes")
+  .attr("id", function(d) {return d.id});
 
-            }
 
-            return d_path;
-          }
-    
-      function edge_class(d) {
-        // Determine within layer or between layer edges
-        node_source_L2 = graph.nodes.filter(function(n){return n.id == d.source;})[0].L2
-        node_target_L2 = graph.nodes.filter(function(n){return n.id == d.target;})[0].L2
-    
-        if (node_source_L2 == node_target_L2) {
-          edge_class_id = "intra-layer"
-        } else {
-          edge_class_id = "inter-layer"
-        }
-    
-        return edge_class_id
-      }
-    
-    
-      // Draw!!
-    
-      var boxes = svgmx.append("g")
-    
-    
-      // Can create an array of layers and then attach that data instead
-      // of using a for loop
+
+// Drawing the sadj
+// First draw box for heatmap
+SVGADJ.append("rect")
+  .attr("x", 20)
+  .attr("y", 20)
+  .attr("height", HEIGHTSADJ-40 + rect_r)
+  .attr("width", WIDTHSADJ-40+ rect_r)
+  .style("stroke", "white")
+  .style("stroke-width", 0.25);
+
+
+// Draw the lower triangular boxes
+let boxes_lower = SVGADJ.append("g")
+.selectAll("rect")
+.data(GRAPH.links)
+.enter().append("rect")
+  .attr("x", function(d) {return x_scale2(get_source_node(d).id)})
+  .attr("y", function(d) {return y_scale2(get_target_node(d).id)})
+  .style("fill", function(d) {return edge_colormap_sadj(d.weight)})
+  .attr("height", rect_r)
+  .attr("width", rect_r)
+  .attr("class", "heatmap");
+
+// Draw the upper triangular boxes
+let boxes_upper = SVGADJ.append("g")
+.selectAll("rect")
+.data(GRAPH.links)
+.enter().append("rect")
+  .attr("x", function(d) {return x_scale2(get_target_node(d).id)})
+  .attr("y", function(d) {return y_scale2(get_source_node(d).id)})
+  .style("fill", function(d) {return edge_colormap_sadj(d.weight)})
+  .attr("height", rect_r)
+  .attr("width", rect_r)
+  .attr("class", "heatmap");
+
+
+// Drawing extra lines to frame box
+const lines_lower = SVGADJ.append("g")
+.selectAll("line")
+.data(GRAPH.nodes)
+.enter().append("line")
+  .attr("x1", function(d) {return x_scale2(d.id)})
+  .attr("y1", 5)
+  .attr("x2", function(d) {return x_scale2(d.id)+rect_r})
+  .attr("y2", 5)
+  .style("stroke", function(d) {return layer_colors[d.L2]})
+  .style("stroke-width", 8);
+
+const lines_upper = SVGADJ.append("g")
+.selectAll("line")
+.data(GRAPH.nodes)
+.enter().append("line")
+  .attr("x1", 5)
+  .attr("y1", function(d) {return y_scale2(d.id)})
+  .attr("x2", 5)
+  .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
+  .style("stroke", function(d) {return layer_colors[d.L2]})
+  .style("stroke-width", 8);
+
+// Drawing the highlights
+let col_highlight = SVGADJ.append("rect")
+  .attr("x",function() {return x_scale2(0)})
+  .attr("y",function() {return y_scale2(0)})
+  .attr("width", rect_r-1)
+  .attr("height", y_scale2.range()[1] - y_scale2.range()[0] + rect_r)
+  .style("opacity", 0)
+  .attr("class", "highlights");
+
+let row_highlight = SVGADJ.append("rect")
+  .attr("x", function() {return x_scale2(0)})
+  .attr("y", function() {return y_scale2(0)})
+  .attr("width", x_scale2.range()[1] - x_scale2.range()[0] + rect_r)
+  .attr("height", rect_r-1)
+  .style("opacity", 0)
+  .attr("class", "highlights");
+
+
+
+
+//// Interactivity
+
+
+// Dropdown/selection effects (changing colors)
+d3.select("select").on("change",function(d){
+
+    let selected = d3.select("#color-dropdown").node().value;
+
+    if (selected == "L1"){
+      node.selectAll("circle")
+        .attr("fill",function(d) {return L1_colormap(d[selected])})
+        .style("mix-blend-mode", "none");
+
+      d3.selectAll(".boxes")
+        .attr("fill", "white")
+        .attr("stroke", "white")
+        .style("fill-opacity", 0.04)
+        .style("stroke-opacity", 0.2);
+
+    } else if (selected == "L2") {
+      node.selectAll("circle")
+        .attr("fill", function(d) {return layer_colors[d[selected]]});
+
       for (i=nLayers-1; i>-1; i--) {
-        boxes.append("path")
-          .attr("d",box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt))
-          .attr("class", "boxes")
-          .attr("id", `box${i}`)
-          .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-          .attr("stroke", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-        }
+        d3.selectAll(`#box${i}`)
+          .attr("fill", function(d) {return layer_colors[GRAPH.nodes.filter(function(n){return n.L2 == i;})[0].L2]})
+          .attr("stroke", function(d) {return layer_colors[GRAPH.nodes.filter(function(n){return n.L2 == i;})[0].L2]})
+          .style("fill-opacity", 0.1)
+          .style("stroke-opacity", 0.5);
+      }
+
+    }
+
+});
+
+  
+// Buttons!
+
+// Save mx button
+d3.select('#mx-button').on('click', function() {
+  var config = {
+    filename: 'mx',
+  }
+  d3_save_svg.save(d3.select('#svg-mx').node(), config);
+
+  // DOM.download(() => serialize(d3.select('#svg-mx')), "test", "Save as SVG")
+});
+
+// Save sadj button
+d3.select('#sadj-button').on('click', function() {
+  let config = {
+    filename: 'sadj',
+  }
+  d3_save_svg.save(d3.select('#svg-sadj').node(), config);
+});
+
+// Rotate button
+let angle = 0;
+d3.select("#rotate-button").on("click", function() {
+
+  angle += 90
+  d3.select("#svg-mx")
+    .style("transform", "rotate(" + angle + "deg)");
+
+});
+  
     
-    
-      var link = svgmx.append("g")
-        .selectAll("line")
-        .data(graph.links)
-        .enter().append("path")
-          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
-          .attr("class", edge_class)
-          .attr("stroke-width", function(d) {
-            let stroke_width
-            let source_L2 = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
-            let target_L2 = graph.nodes.filter(x => {return x.id == d.target})[0].L2;
+  
+// Listen to the slider
+d3.select("#slider-x0").on("input", function(d){
+  selectedValue = this.value
+  x_0 = this.value
+  changex0(x_0, y_0, d_project, tilt)
 
+});
 
-            if (edge_class(d) === "intra-layer") {
-
-
-              if (source_L2 === 2) {
-
-                stroke_width = edge_stroke_scale_g3(d.weight);
-                
-              } else if (source_L2 === 1) {
-
-                stroke_width = edge_stroke_scale_g2(d.weight);
-                
-              } else {
-
-                stroke_width = edge_stroke_scale_g1(d.weight);
-
-              }
-
-            } else {
-
-
-              if ([0, 1].includes(source_L2) && [0, 1].includes(target_L2)) {
-
-                
-                stroke_width = edge_stroke_scale_g1g2(d.weight);
-              } else if ([1, 2].includes(source_L2) && [1, 2].includes(target_L2)) {
-
-
-                stroke_width = edge_stroke_scale_g2g3(d.weight);
-
-              } else {
-                stroke_width = 10;
-              }
-
-            }
-
-            return stroke_width});
-
-
-      // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
-      link.filter(d => edge_class(d) === "intra-layer" && graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)
-        .attr("d",edge_line_2)
-        .attr("marker-end", "url(#arrow)");
-      
-      // Update links that are inter-layer so as to have a uniform stroke width
-      // link.filter(d => edge_class(d) === "inter-layer")
-      //   .attr("stroke-width", 0.5);
+d3.select("#slider-tilt").on("input", function(d){
+  tilt = this.value
+  changex0(x_0,y_0,d_project,tilt)
+});
+  
+  
 
 
 
-      function edge_line_2(d) {
+
+
+//// Functions
+
+// Generally helpful functions
+function get_source_node(d) {
+  source_node = GRAPH.nodes.filter(function(n){return n.id == d.source;})[0];
+  return source_node
+}
+
+function get_target_node(d) {
+  target_node = GRAPH.nodes.filter(function(n){return n.id == d.target;})[0];
+  return target_node
+}
+
+// Projection functions
+
+function project_x(x_coord, y_coord, z_coord, d_project, x_0, tilt) {
+
+  // first from python to 3d using OP
+  x_3d = y_coord;
+  z_3d = x_coord + d_project;
+
+  // next project from 3d to 2d window
+  x_proj = x_0 + (x_3d-x_0)*(d_project/z_3d)
+  return x_proj
+};
+
+function project_y(x_coord, y_coord, z_coord, d_project, y_0, tilt) {
+
+  // first from python to 3d using //
+  y_3d = tilt;
+  z_3d = x_coord + d_project;
+
+  // next project from 3d to 2d
+  y_proj = (-1)*(y_0 + (y_3d-y_0)*(d_project/z_3d)) + z_coord
+
+  return y_proj
+};
 
 
 
-        // length of current path
-        let pl = this.getTotalLength(),
-        // radius of circle plus marker head
-        r = node_radius + 2, //12 is the "size" of the marker Math.sqrt(12**2 + 12 **2)
-        // position close to where path intercepts circle	
-        m = this.getPointAtLength(pl - r);    
+// Box functions
+
+function box_path(boxspan_x, boxspan_y, box_buffer, layer, x_0, y_0, d_project, tilt) {
+
+  // Project to appropriate location, then scale using x_scale, y_scale functions
+  let z_value = GRAPH.nodes.filter(function(n){return n.L2 == layer;})[0].z;
+
+
+  let x1p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
+  let y1p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
+  let x2p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, x_0, tilt));
+  let y2p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[1] + box_buffer, z_value, d_project, y_0, tilt));
+  let x3p = x_scale(project_x(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
+  let y3p = y_scale(project_y(boxspan_x[1] + box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
+  let x4p = x_scale(project_x(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, x_0, tilt));
+  let y4p = y_scale(project_y(boxspan_x[0] - box_buffer, boxspan_y[0] - box_buffer, z_value, d_project, y_0, tilt));
+
+  return `M ${x1p},${y1p} L ${x2p},${y2p} L ${x3p} ${y3p} L ${x4p} ${y4p} L ${x1p} ${y1p}`;
+
+};
+
+
+
+// Edge functions (drawing and others)
+
+function edge_line(d, x_0, y_0, d_project, tilt) {
+  
+  // Draw a line from source node to target node. Line/arc depends on layer
+
+  const source_node = get_source_node(d); 
+  const target_node = get_target_node(d); 
+  const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
+  const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+  const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
+  const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
+
+  let d_path;
+  if (edge_class(d) === "intra-layer") {
+
+    // If the edge is within either undirected graph (g1, g2, or L2 = 0, 1), make it a line
+    if (source_node.L2 === 2) {
+
+      // Draw curves to connect nodes
+      // This beautiful solution adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph
+
+      let dx = x2 - x1,
+          dy = y2 - y1,
+          dr = Math.sqrt(dx*dx + dy*dy);
+
+      // If nodes are too close together, we have to draw their arc using the larger part of the ellipse
+      if (dr < 2*node_radius + 2) {
+
+        d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + x2 + "," + y2;
         
-        // Get coordinates of nodes
-        const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
-        const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
-        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
-        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
-        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
+      } else {
 
-
-        var dx = m.x - x1,
-            dy = m.y - y1,
-            dr = Math.sqrt(dx * dx + dy * dy);
-
-        if (dr < 2*node_radius + 2) {
-
-          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + m.x + "," + m.y;
-          
-        } else {
-
-          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
-          
-        }
-
-
+        d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
+        
       }
-    
-    
-    
-    
-      var node = svgmx.append("g")
-        .attr("class","nodes")
-        .selectAll("g")
-        .data(graph.nodes)
-        .enter().append("g")
-        .on("mouseover", mouseover)
-        .on("mouseout", mouseout)
-    
-    
-      node.append("circle")
-        .attr("r", node_radius)
-        .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
-        .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
-        .attr("fill", function(d) {console.log(d.L2); return node_colormap(d.L2)})
-        .attr("class", "nodes_circles")
-        .attr("id", function(d) {return d.id})
-    
-      node.append("circle")
-        .attr("r", node_radius)
-        .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
-        .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
-        .attr("class", "nodes_strokes")
-        .attr("id", function(d) {return d.id})
-    
-    
-    
-    
-    
-    
-    
-    // buttons!
-      d3.select('#mx-button').on('click', function() {
-        var config = {
-          filename: 'mx',
-        }
-        d3_save_svg.save(d3.select('#svg-mx').node(), config);
 
-        // DOM.download(() => serialize(d3.select('#svg-mx')), "test", "Save as SVG")
-      });
-    
-      d3.select('#sadj-button').on('click', function() {
-        var config = {
-          filename: 'sadj',
-        }
-        d3_save_svg.save(d3.select('#svg-sadj').node(), config);
-      });
-    
-    
-      var angle = 0;
-      d3.select("#rotate-button").on("click", function() {
-    
-        angle += 90
-        d3.select("#svg-mx")
-          .style("transform", "rotate(" + angle + "deg)");
-      })
-    
-      // Slider functions
-      function changex0(selectedValuex, selectedValuey, selected_value_d, selected_tilt) {
-        x_0 = Number(selectedValuex);
-        y_0 = Number(selectedValuey);
-        d_project = Number(selected_value_d);
-        tilt = Number(selected_tilt);
+    } else {
 
-        console.log(x_0,y_0,d_project,tilt)
-    
-        // Need to recalculate the x_scale domain each time
-        extent_buffer = 0.01
-        // x_scale.domain(d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); }));
-        var nodes_extent1 = d3.extent(graph.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt)});
-        x_scale.domain([nodes_extent1[0] - extent_buffer, nodes_extent1[1] + extent_buffer]);
-    
-    
-        // And y scale
-        y_scale.domain(d3.extent(graph.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
-    
-        // Recalculate node position
-        d3.selectAll(".nodes_circles")
-          .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
-          .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
-    
-        d3.selectAll(".nodes_strokes")
-          .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
-          .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
-    
-        // Recalculate edge postitions
-        d3.selectAll(".intra-layer")
-          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+      // Then we know both nodes are in g1 or g2
+      d_path = "M" + x1 + "," + y1 + "L" + x2 + "," + y2;
 
-        d3.selectAll(".intra-layer").filter(d => graph.nodes.filter(function(n){return n.id == d.source;})[0].L2 === 2)
-          .attr("d",edge_line_2);
-    
-        d3.selectAll(".inter-layer")
-          .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
-    
-        // Recalculate box postitions
-        for (i=nLayers-1; i>-1; i--) {
-          d3.selectAll(`#box${i}`)
-            .attr("d",function(d) {return box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt)})
-            // .attr("fill", function(d) {return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-            // .attr("stroke", function(d) { return node_colormap(graph.nodes.filter(function(n){return n.L2 == i;})[0].L2)})
-        }
-    
-    
-    
-    
-      }
-    
-      // Listen to the slider
-      d3.select("#slider-x0").on("input", function(d){
-        selectedValue = this.value
-        x_0 = this.value
-        changex0(x_0, y_0, d_project, tilt)
-    
-      })
-    
-    
-      d3.select("#slider-tilt").on("input", function(d){
-        //   selectedValue = this.value
-        tilt = this.value
-        changex0(x_0,y_0,d_project,tilt)
-      })
-    
-    
-    
-    
-      // Plotting the supra-adjacency matrix
-        //
-        function get_source_node(d) {
-          source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0];
-          return source_node
-        }
-    
-        function get_target_node(d) {
-          target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0];
-          return target_node
-        }
-        //
-        // // Edge weight colormap
-        //
-        var edge_colormap = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(graph.links, function(d) {return d.weight})[1], 0]);
-        console.log([0, d3.extent(graph.links, function(d) {return d.weight})[1]])
-        //
-        var svgsadj= d3.select("#svg-sadj"),
-            widthsadj = +svgsadj.attr("width"),
-            heightsadj = +svgsadj.attr("height");
-    
-        svgsadj.attr("class", "svg_class")
-    
-        var y_scale2 = d3.scaleLinear()
-          .range([20, heightsadj-20])
-    
-        y_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }));
-    
-        var x_scale2 = d3.scaleLinear()
-          .range([20, widthsadj-20]);
-        x_scale2.domain(d3.extent(graph.nodes, function(d) {return d.id; }))
-    
-        var rect_r = (widthsadj-40)/graph.nodes.length;
-    
-    
-        // draw box for heatmap
-        svgsadj.append("rect")
-          .attr("x", 20)
-          .attr("y", 20)
-          .attr("height", heightsadj-40 + rect_r)
-          .attr("width", widthsadj-40+ rect_r)
-          .style("stroke", "white")
-          .style("stroke-width", 0.25)
-    
-    
-    
-    
-        var boxes_lower = svgsadj.append("g")
-          .selectAll("rect")
-          .data(graph.links)
-          .enter().append("rect")
-            .attr("x", function(d) {return x_scale2(get_source_node(d).id)})
-            .attr("y", function(d) {return y_scale2(get_target_node(d).id)})
-            .style("fill", function(d) {return edge_colormap(d.weight)})
-            .attr("height", rect_r)
-            .attr("width", rect_r)
-            .attr("class", "heatmap")
-    
-        var boxes_upper = svgsadj.append("g")
-          .selectAll("rect")
-          .data(graph.links)
-          .enter().append("rect")
-            .attr("x", function(d) {return x_scale2(get_target_node(d).id)})
-            .attr("y", function(d) {return y_scale2(get_source_node(d).id)})
-            .style("fill", function(d) {return edge_colormap(d.weight)})
-            .attr("height", rect_r)
-            .attr("width", rect_r)
-            .attr("class", "heatmap")
-    
-    
-    
-        var lines_lower = svgsadj.append("g")
-          .selectAll("line")
-          .data(graph.nodes)
-          .enter().append("line")
-            .attr("x1", function(d) {return x_scale2(d.id)})
-            .attr("y1", 5)
-            .attr("x2", function(d) {return x_scale2(d.id)+rect_r})
-            .attr("y2", 5)
-            .style("stroke", function(d) {return node_colormap(d.L2)})
-            .style("stroke-width", 8)
-    
-        var lines_upper = svgsadj.append("g")
-          .selectAll("line")
-          .data(graph.nodes)
-          .enter().append("line")
-            .attr("x1", 5)
-            .attr("y1", function(d) {return y_scale2(d.id)})
-            .attr("x2", 5)
-            .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
-            .style("stroke", function(d) {return node_colormap(d.L2)})
-            .style("stroke-width", 8)
+    }
 
-        var col_highlight = svgsadj.append("rect")
-          .attr("x",function() {return x_scale2(0)})
-          .attr("y",function() {return y_scale2(0)})
-          .attr("width", rect_r-1)
-          .attr("height", y_scale2.range()[1] - y_scale2.range()[0] + rect_r)
-          .style("opacity", 0)
-          .attr("class", "highlights")
+  } else {
 
-        var row_highlight = svgsadj.append("rect")
-          .attr("x", function() {return x_scale2(0)})
-          .attr("y", function() {return y_scale2(0)})
-          .attr("width", x_scale2.range()[1] - x_scale2.range()[0] + rect_r)
-          .attr("height", rect_r-1)
-          .style("opacity", 0)
-          .attr("class", "highlights")
+    d_path = `M ${x1},${y1} 
+          L ${x2},${y2}`;
+
+  }
+
+  return d_path;
+
+}
 
 
-        // Mouseover and Mouseouts
-        function mouseover() {
-          d3.select(this).selectAll("circle").transition()
-            .duration(100)
-            .attr("r",node_radius*2)
+function edge_line_2(d) {
+  // Takes in an edge, looks at its current path, and if the edge is within g3 will cut the path prematurely so the arrow fits.
 
-          // Perhaps highlight any edges from this node?
+  // Get length of current path
+  let pl = this.getTotalLength(),
 
-          // Now highlight on the adj matrix
+  // Define radius of circle around node
+  r = node_radius + 2,
 
-          var selected_node_id = d3.select(this).select("circle").attr("id");
-          console.log(selected_node_id)
+  // Set the new end point close to where path intercepts circle	
+  m = this.getPointAtLength(pl - r);    
+  
+  // Get coordinates of nodes
+  let source_node = get_source_node(d) //GRAPH.nodes.filter(function(n){return n.id == d.source;})[0],
+   target_node = get_target_node(d) //GRAPH.nodes.filter(function(n){return n.id == d.target;})[0],
+   y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt)),
+   x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt)),
+   x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
 
-          // Move col_highlight to appropriate spot and then show it!
-          col_highlight
-            .attr("x", function() {return x_scale2(selected_node_id)})
-            .style("opacity", 1);
+  // Calculate the change in x, y between new start and end positions
+  let dx = m.x - x1,
+      dy = m.y - y1,
+      dr = Math.sqrt(dx * dx + dy * dy);
 
-          row_highlight
-            .attr("y", function() {return y_scale2(selected_node_id)})
-            .style("opacity", 1);
+  // Draw new curved edge. If the nodes are too close, draw a larger loop instead.
+  if (dr < 2*node_radius + 2) {
+
+    return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + m.x + "," + m.y;
+    
+  } else {
+
+    return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+    
+  }
+
+};
 
 
 
-        }
 
-        function mouseout() {
-          d3.select(this).selectAll("circle").transition()
-            .duration(100)
-            .attr("r",node_radius)
+function edge_class(d) {
+  // Determine within layer or between layer edges
 
-          col_highlight
-            .style("opacity", 0);
+  let node_source_L2 = get_source_node(d).L2,
+      node_target_L2 = get_target_node(d).L2;
 
-          row_highlight
-            .style("opacity", 0);
-        }
-    
-    
-    
-    
-    
-    
-    
-    // });
-    
-    </script>
+  if (node_source_L2 == node_target_L2) {
+    edge_class_id = "intra-layer"
+  } else {
+    edge_class_id = "inter-layer"
+  }
+
+  return edge_class_id
+
+};
+  
+  
+function get_stroke_width(d) {
+  // Given edge data, determine the stroke width
+
+  let stroke_width
+  let source_L2 = GRAPH.nodes.filter(x => {return x.id == d.source})[0].L2;
+  let target_L2 = GRAPH.nodes.filter(x => {return x.id == d.target})[0].L2;
+
+
+  if (edge_class(d) === "intra-layer") {
+
+
+    if (source_L2 === 2) {
+
+      stroke_width = edge_stroke_scale_g3(d.weight);
+      
+    } else if (source_L2 === 1) {
+
+      stroke_width = edge_stroke_scale_g2(d.weight);
+      
+    } else {
+
+      stroke_width = edge_stroke_scale_g1(d.weight);
+
+    }
+
+  } else {
+
+
+    if ([0, 1].includes(source_L2) && [0, 1].includes(target_L2)) {
+
+      
+      stroke_width = edge_stroke_scale_g1g2(d.weight);
+    } else if ([1, 2].includes(source_L2) && [1, 2].includes(target_L2)) {
+
+
+      stroke_width = edge_stroke_scale_g2g3(d.weight);
+
+    } else {
+      stroke_width = 10;
+    }
+
+  }
+
+  return stroke_width
+
+}
+  
+
+
+
+// Interactivity
+
+// Slider functions
+function changex0(selectedValuex, selectedValuey, selected_value_d, selected_tilt) {
+  // Changes multilayer network rendering based on slider value
+
+  x_0 = Number(selectedValuex);
+  y_0 = Number(selectedValuey);
+  d_project = Number(selected_value_d);
+  tilt = Number(selected_tilt);
+
+  console.log(x_0,y_0,d_project,tilt)   // This helps to know EXACTLY which coordinates were used in case you need to remake the figure.
+
+  // Recalculate the x_scale domain
+  let nodes_extent1 = d3.extent(GRAPH.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt)});
+  x_scale.domain([nodes_extent1[0] - extent_buffer, nodes_extent1[1] + extent_buffer]);
+
+  // And recalculate y_scale
+  y_scale.domain(d3.extent(GRAPH.nodes, function(d) {return project_y(d.x, d.y, d.z, d_project, y_0, tilt); }));
+
+  // Recalculate node position
+  d3.selectAll(".nodes_circles")
+    .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
+    .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
+
+  d3.selectAll(".nodes_strokes")
+    .attr("cx", function(d) {return x_scale(project_x(d.x, d.y, d.z, d_project, x_0, tilt))})
+    .attr("cy", function(d) {return y_scale(project_y(d.x, d.y, d.z, d_project, y_0, tilt))})
+
+  // Recalculate edge postitions
+  d3.selectAll(".intra-layer")
+    .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+
+  d3.selectAll(".intra-layer").filter(d => get_source_node(d).L2 === 2)
+    .attr("d",edge_line_2);
+
+  d3.selectAll(".inter-layer")
+    .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+
+  // Recalculate box postitions
+  for (i=nLayers-1; i>-1; i--) {
+    d3.selectAll(`#box${i}`)
+      .attr("d",function(d) {return box_path(boxspan_x, boxspan_y, box_buffer, i, x_0, y_0, d_project, tilt)})
+  }
+
+};
+
+
+// Mouseover and Mouseouts
+function mouseover() {
+  d3.select(this).selectAll("circle").transition()
+    .duration(100)
+    .attr("r",node_radius*2)
+
+
+  // Now highlight on the adj matrix
+
+  let selected_node_id = d3.select(this).select("circle").attr("id");
+  console.log(selected_node_id)
+
+  // Move col_highlight to appropriate spot and then show it!
+  col_highlight
+    .attr("x", function() {return x_scale2(selected_node_id)})
+    .style("opacity", 1);
+
+  row_highlight
+    .attr("y", function() {return y_scale2(selected_node_id)})
+    .style("opacity", 1);
+
+
+
+};
+
+function mouseout() {
+  d3.select(this).selectAll("circle").transition()
+    .duration(100)
+    .attr("r",node_radius)
+
+  col_highlight
+    .style("opacity", 0);
+
+  row_highlight
+    .style("opacity", 0);
+};
+  
+  
+  
+
+  
+  </script>
 
 
 </body>
