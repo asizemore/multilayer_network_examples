@@ -16,11 +16,12 @@ SVGADJ.attr("class", "svg_class")
 const node_radius = 4,  // Size of nodes
     box_buffer = 0.1,   // Controls amount of buffer between network extremes and box
     extent_buffer = 0.01,   // Controls buffer for node placements
-    layer_colors = ["#232544", "#394960", "#516e7a"],    // Colors for layers (in order)
+    layer_colors = ["#232544", "#516e7a", "#89aa10"],    // Colors for layers (in order)
+    edge_colors = ["#232544", "#516e7a", "#89aa10"],     // Colors for edges -- make sure the third color matches the fill attribute of the marker in line 115 of style_lighttheme.css=
     edge_stroke_scale_g1 = d3.scaleLinear().domain([0.000153,0.0045]).range([0.05,3]),    // Scale stroke width for intra-layer edges in g1
     edge_stroke_scale_g2 = d3.scaleLinear().domain([0.000317,0.0475]).range([0.05,3]),    // Scale stroke width for intra-layer edges in g2
     edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0.05,3]),     // Scale stroke width for intra-layer edges in g3
-    edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05, 3]),    // Scale stroke width for inter-layer edges between g1 and g2
+    edge_stroke_scale_g1g2 = d3.scaleLinear().domain([0.295, 0.508]).range([0.05,3]),    // Scale stroke width for inter-layer edges between g1 and g2
     edge_stroke_scale_g2g3 = d3.scaleLinear().domain([2963, 5078]).range([0.5, 3]);       // Scale stroke width for inter-layer edges between g2 and g3
 
 
@@ -139,7 +140,8 @@ let link = SVGMX.append("g")
       .enter().append("path")
         .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
         .attr("class", edge_class)
-        .attr("stroke-width", get_stroke_width);
+        .attr("stroke-width", get_stroke_width)
+        .attr("stroke", get_stroke_color);
 
 // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-GRAPH)
 link.filter(d => edge_class(d) === "intra-layer" && get_source_node(d).L2 === 2)
@@ -516,6 +518,13 @@ function edge_class(d) {
   return edge_class_id
 
 };
+
+
+function get_stroke_color(d) {
+  // Let the CSS recolor the inter-layer edges. 
+  return edge_colors[get_source_node(d).L2];
+
+}
   
   
 function get_stroke_width(d) {

@@ -105,14 +105,14 @@
     }
     
     .intra-layer {
-      stroke: #212c3d;
+      /* stroke: #212c3d; */
       /* stroke-width: 1px; */
       /* opacity: 0.8; */
       fill: none;
     }
     
     svg marker {
-      fill:#212c3d;
+      fill:#89aa10;
     }
     
     .boxes {
@@ -131,7 +131,7 @@
       stroke: white;
       stroke-width: 0.9;
       fill: none;
-      mix-blend-mode: lighten;
+      /* mix-blend-mode: lighten; */
       z-index: -1;
     }
 
