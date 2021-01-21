@@ -4,13 +4,11 @@
 const SVGMX= d3.select("#svg-mx"),
     WIDTHMX = +SVGMX.attr("width"),
     HEIGHTMX = +SVGMX.attr("height"),
-    arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length,
-    SVGADJ= d3.select("#svg-sadj"),
-    WIDTHSADJ = +SVGADJ.attr("width"),
-    HEIGHTSADJ = +SVGADJ.attr("height");
+    arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
+
 
 SVGMX.attr("class", "svg_class")
-SVGADJ.attr("class", "svg_class")
+
 
 // Parameters ---- feel free to experiment with these!
 const node_radius = 4,  // Size of nodes
@@ -41,7 +39,7 @@ const nNodes_total = d3.extent(GRAPH.nodes, function(d) {return d.id})[1]
 const nLayers = d3.extent(GRAPH.nodes, function(d) {return d.L2})[1]+1;
 
 const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(GRAPH.nodes, function(d) {return d.L1}));   // Colormap for coloring by L1
-const edge_colormap_sadj = d3.scaleSequential(d3.interpolateGreys).domain([d3.extent(GRAPH.links, function(d) {return d.weight})[1], 0]); // Colormap for the sadj
+
 
 // Retreive coordinates of the first layer of nodes
 x_pos = [];
@@ -98,18 +96,8 @@ y_scale.domain(d3.extent(GRAPH.nodes, function(d) {return project_y(d.x, d.y, d.
 let nodes_extent = d3.extent(GRAPH.nodes, function(d) {return project_x(d.x, d.y, d.z, d_project, x_0, tilt); });
 x_scale.domain([nodes_extent[0] - extent_buffer, nodes_extent[1] + extent_buffer]);
 
-// scales for the sadj svg
-let y_scale2 = d3.scaleLinear()
-        .range([20, HEIGHTSADJ-20])
-  
-y_scale2.domain(d3.extent(GRAPH.nodes, function(d) {return d.id; }));
-  
-let x_scale2 = d3.scaleLinear()
-        .range([20, WIDTHSADJ-20]);
-x_scale2.domain(d3.extent(GRAPH.nodes, function(d) {return d.id; }))
-  
-// radius for each box of the heatmap
-let rect_r = (WIDTHSADJ-40)/GRAPH.nodes.length;
+
+
 
     
 
@@ -178,82 +166,6 @@ node.append("circle")
 
 
 
-// Drawing the sadj
-// First draw box for heatmap
-SVGADJ.append("rect")
-  .attr("x", 20)
-  .attr("y", 20)
-  .attr("height", HEIGHTSADJ-40 + rect_r)
-  .attr("width", WIDTHSADJ-40+ rect_r)
-  .style("stroke", "white")
-  .style("stroke-width", 0.25);
-
-
-// Draw the lower triangular boxes
-let boxes_lower = SVGADJ.append("g")
-.selectAll("rect")
-.data(GRAPH.links)
-.enter().append("rect")
-  .attr("x", function(d) {return x_scale2(get_source_node(d).id)})
-  .attr("y", function(d) {return y_scale2(get_target_node(d).id)})
-  .style("fill", function(d) {return edge_colormap_sadj(d.weight)})
-  .attr("height", rect_r)
-  .attr("width", rect_r)
-  .attr("class", "heatmap");
-
-// Draw the upper triangular boxes
-let boxes_upper = SVGADJ.append("g")
-.selectAll("rect")
-.data(GRAPH.links)
-.enter().append("rect")
-  .attr("x", function(d) {return x_scale2(get_target_node(d).id)})
-  .attr("y", function(d) {return y_scale2(get_source_node(d).id)})
-  .style("fill", function(d) {return edge_colormap_sadj(d.weight)})
-  .attr("height", rect_r)
-  .attr("width", rect_r)
-  .attr("class", "heatmap");
-
-
-// Drawing extra lines to frame box
-const lines_lower = SVGADJ.append("g")
-.selectAll("line")
-.data(GRAPH.nodes)
-.enter().append("line")
-  .attr("x1", function(d) {return x_scale2(d.id)})
-  .attr("y1", 5)
-  .attr("x2", function(d) {return x_scale2(d.id)+rect_r})
-  .attr("y2", 5)
-  .style("stroke", function(d) {return layer_colors[d.L2]})
-  .style("stroke-width", 8);
-
-const lines_upper = SVGADJ.append("g")
-.selectAll("line")
-.data(GRAPH.nodes)
-.enter().append("line")
-  .attr("x1", 5)
-  .attr("y1", function(d) {return y_scale2(d.id)})
-  .attr("x2", 5)
-  .attr("y2", function(d) {return y_scale2(d.id)+rect_r})
-  .style("stroke", function(d) {return layer_colors[d.L2]})
-  .style("stroke-width", 8);
-
-// Drawing the highlights
-let col_highlight = SVGADJ.append("rect")
-  .attr("x",function() {return x_scale2(0)})
-  .attr("y",function() {return y_scale2(0)})
-  .attr("width", rect_r-1)
-  .attr("height", y_scale2.range()[1] - y_scale2.range()[0] + rect_r)
-  .style("opacity", 0)
-  .attr("class", "highlights");
-
-let row_highlight = SVGADJ.append("rect")
-  .attr("x", function() {return x_scale2(0)})
-  .attr("y", function() {return y_scale2(0)})
-  .attr("width", x_scale2.range()[1] - x_scale2.range()[0] + rect_r)
-  .attr("height", rect_r-1)
-  .style("opacity", 0)
-  .attr("class", "highlights");
-
 
 
 
@@ -305,13 +217,7 @@ d3.select('#mx-button').on('click', function() {
   // DOM.download(() => serialize(d3.select('#svg-mx')), "test", "Save as SVG")
 });
 
-// Save sadj button
-d3.select('#sadj-button').on('click', function() {
-  let config = {
-    filename: 'sadj',
-  }
-  d3_save_svg.save(d3.select('#svg-sadj').node(), config);
-});
+
 
 // Rotate button
 let angle = 0;
@@ -632,20 +538,10 @@ function mouseover() {
     .attr("r",node_radius*2)
 
 
-  // Now highlight on the adj matrix
-
   let selected_node_id = d3.select(this).select("circle").attr("id");
   console.log(selected_node_id)
 
-  // Move col_highlight to appropriate spot and then show it!
-  col_highlight
-    .attr("x", function() {return x_scale2(selected_node_id)})
-    .style("opacity", 1);
-
-  row_highlight
-    .attr("y", function() {return y_scale2(selected_node_id)})
-    .style("opacity", 1);
-
+  
 
 
 };
@@ -655,11 +551,7 @@ function mouseout() {
     .duration(100)
     .attr("r",node_radius)
 
-  col_highlight
-    .style("opacity", 0);
-
-  row_highlight
-    .style("opacity", 0);
+ 
 };
   
   

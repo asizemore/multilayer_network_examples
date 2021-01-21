@@ -38,9 +38,7 @@
       isolation: isolate;
     }
     
-    #svg-sadj {
-      margin: 0 auto;
-    }
+   
     
     #footer {
       position: fixed;
@@ -76,13 +74,6 @@
     }
     
     
-    
-    #svgdiv-sadj {
-      margin: auto;
-      padding: 0px 30px;
-      text-align: center;
-      height: 600px;
-    }
     
     #svgs-div {
       display:grid;
@@ -135,9 +126,4 @@
       z-index: -1;
     }
 
-    .highlights {
-      stroke: white;
-      fill: none;
-      mix-blend-mode:screen;
-      stroke-width: 1px;
-    }
+
