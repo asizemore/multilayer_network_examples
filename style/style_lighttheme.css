@@ -76,12 +76,12 @@
     
     
     #svgs-div {
-      display:grid;
+      /* display:grid;
       grid-template-columns: repeat(2, 1fr);
       grid-auto-rows: 1fr;
-      grid-column-gap: 10px;
+      grid-column-gap: 10px; */
       width:100%;
-      height: 1000px;
+      height: 1300px;
       
       
     }
@@ -98,12 +98,13 @@
     .intra-layer {
       /* stroke: #212c3d; */
       /* stroke-width: 1px; */
-      /* opacity: 0.8; */
+      opacity: 0.8;
       fill: none;
     }
     
     svg marker {
       fill:#89aa10;
+      opacity: 0.8;
     }
     
     .boxes {

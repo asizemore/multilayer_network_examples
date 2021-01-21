@@ -81,12 +81,12 @@
     
     
     #svgs-div {
-      display:grid;
+      /* display:grid;
       grid-template-columns: repeat(2, 1fr);
       grid-auto-rows: 1fr;
-      grid-column-gap: 10px;
+      grid-column-gap: 10px; */
       width:100%;
-      height: 1000px;
+      height: 1300px;
       
       
     }
@@ -103,12 +103,13 @@
     .intra-layer {
       /* stroke: #212c3d; */
       /* stroke-width: 1px; */
-      /* opacity: 0.8; */
+      opacity: 0.8;
       fill: none;
     }
     
     svg marker {
       fill:#89aa10;
+      opacity: 0.8;
     }
     
     .boxes {
@@ -18585,7 +18586,7 @@
     <div id="svgdiv-mx">
 
       <!-- Svg that holds the multilayer network -->
-      <svg width="1000" height="900" id="svg-mx">
+      <svg width="1000" height="1300" id="svg-mx">
 
         <!-- Define the arrowhead for directed edges -->
         <defs>
