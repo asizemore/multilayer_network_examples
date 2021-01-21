@@ -16,6 +16,7 @@
       margin-bottom: 30px;
       font-weight: lighter;
     }
+
     
     #header h1 {
       margin: auto;
@@ -24,7 +25,7 @@
       font-family: "Helvetica Neue", Helvetica, sans-serif;
       font-weight: 300;
       padding-left: 20px;
-    
+      
     }
     
     #svgdiv-mx {
@@ -37,9 +38,7 @@
       isolation: isolate;
     }
     
-    #svg-sadj {
-      margin: 0 auto;
-    }
+   
     
     #footer {
       position: fixed;
@@ -76,38 +75,36 @@
     
     
     
-    #svgdiv-sadj {
-      margin: auto;
-      padding: 0px 30px;
-      text-align: center;
-      height: 600px;
-    }
-    
     #svgs-div {
-      display:grid;
+      /* display:grid;
       grid-template-columns: repeat(2, 1fr);
       grid-auto-rows: 1fr;
-      grid-column-gap: 10px;
+      grid-column-gap: 10px; */
       width:100%;
-      height: 700px;
-    
-    
+      height: 1300px;
+      
+      
     }
     
     
     .inter-layer {
-      stroke: rgb(109, 110, 110);
-      stroke-width: 0.5px;
+      stroke: #808284;
+      /* stroke-width: 0.5px; */
       mix-blend-mode: darken;
       opacity: 0.6;
       fill: none;
     }
     
     .intra-layer {
-      stroke: rgb(143, 144, 146);
-      stroke-width: 1px;
+      /* stroke: #212c3d; */
+      /* stroke-width: 1px; */
       opacity: 0.8;
       fill: none;
+    }
+    
+    svg marker {
+      fill:#89aa10;
+      opacity: 0.8;
     }
     
     .boxes {
@@ -118,7 +115,6 @@
     }
     
     .nodes_circles {
-      /* Something weird is going on with these TODO */
       stroke: none;
       z-index: 1;
     }
@@ -127,13 +123,8 @@
       stroke: white;
       stroke-width: 0.9;
       fill: none;
-      mix-blend-mode: lighten;
+      /* mix-blend-mode: lighten; */
       z-index: -1;
     }
 
-    .highlights {
-      stroke: white;
-      fill: none;
-      mix-blend-mode: exclusion;
-      stroke-width: 1px;
-    }
+

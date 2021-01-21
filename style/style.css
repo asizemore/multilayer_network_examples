@@ -97,7 +97,7 @@
     
     .inter-layer {
       stroke: rgb(255,255,255);
-      /* stroke-width: 0.5px; */
+      stroke-width: 0.5px;
       mix-blend-mode: color-dodge;
       opacity: 0.6;
       fill: none;
@@ -109,6 +109,8 @@
       mix-blend-mode: color-dodge;
       opacity: 0.8;
       fill: none;
+      /* marker-end: url(#arrow); */
+      /* markerHeight: 50; */
     }
     
     .boxes {
@@ -125,8 +127,9 @@
     }
     
     .nodes_strokes {
+      /* stroke: rgb(1, 7, 9); */
       stroke: white;
-      stroke-width: 0.9;
+      stroke-width: 0.5;
       fill: none;
       mix-blend-mode: lighten;
       z-index: -1;

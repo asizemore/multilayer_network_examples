@@ -12,24 +12,32 @@
     <h1> Multilayer network </h1>
   </div>
 
+  <!-- Assign the data (mxgraph) from the python notebook to an element -->
   <div id="datadiv" data-mxgraph='{{mxgraph}}' style='display:none'></div>
+
+  <!-- Construct the divs for the two svgs -->
   <div id="svgs-div">
-
-
     <div id="svgdiv-mx">
-      <svg width="600" height="600" id="svg-mx"></svg>
+
+      <!-- Svg that holds the multilayer network -->
+      <svg width="1000" height="1300" id="svg-mx">
+
+        <!-- Define the arrowhead for directed edges -->
+        <defs>
+          <marker id="arrow" markerWidth="7" markerHeight="7" refX="2" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L3,3 z" />
+          </marker>
+        </defs>
+
+      </svg>
+
     </div>
 
 
+  </div> 
 
 
-    <div id="svgdiv-sadj">
-      <h2>supra-adjacency matrix</h2>
-      <svg width="500" height="500" id="svg-sadj"></svg>
-    </div>
-
-  </div>
-
+  <!-- Construct the options row -->
   <div id="options" width=100 height=200>
     
     <div>
@@ -60,6 +68,7 @@
 
   </div>
 
+  <!-- Construct the footer -->
   <div id="footer">
 
     <button type="button" id="mx-button">Save mx</button>
@@ -72,16 +81,14 @@
 
 
 <!-- Load d3 and other helper scripts -->
-<!-- Tip: placing scripts at the bottom of body improves display speed -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
-<!-- <script src="d3-save-svg-gh-pages/assets/d3-save-svg.min.js"></script> -->
 <script>{{ d3_save_svg }}</script>
 <script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
-
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
+<!-- Insert the javascript found in the associated file. -->
 <script>{{ js_text }}</script>
 
 

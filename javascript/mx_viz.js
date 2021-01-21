@@ -123,7 +123,7 @@
     // Define necessary functions for nodes
     
     
-      var node_radius = 6;
+      var node_radius = 4;
     
       if (nLayers < 5) {
     
@@ -167,19 +167,12 @@
         var node_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L2}));
       }
       
-      // var L1_colormap = d3.scaleOrdinal(d3.schemeAccent).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
-      var L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+
+      const L1_colormap = d3.scaleSequential(d3.interpolateSpectral).domain(d3.extent(graph.nodes, function(d) {return d.L1}));
+      const edge_stroke_scale_g12 = d3.scaleLinear().domain([0.000098,0.0045]).range([0,2]);
+      const edge_stroke_scale_g3 = d3.scaleLinear().domain([0.000055,0.086]).range([0,2]);
     
-    
-      // d3.select("#color-dropdown").text("first");
-    
-      // layer_data = Object.getOwnPropertyNames(graph.nodes[0])
-      // d3.select("#color-dropdown").selectAll("option")
-      //   .data(layer_data)
-      //   .enter()
-      //     .append("option")
-      //       .attr("value", function(d) {return d})
-      //       .text(function(d) {return d});
+
     
       d3.select("select")
         .on("change",function(d){
@@ -226,9 +219,35 @@
             const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
             const y2 = y_scale(project_y(target_node.x, target_node.y, target_node.z, d_project, y_0, tilt));
             const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
-    
-    
-            return `M ${x1},${y1} L ${x2},${y2}`;
+
+            let d_path;
+            if (edge_class(d) === "intra-layer") {
+
+            // This beautiful solution found at https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph
+
+              let dx = x2 - x1,
+                  dy = y2 - y1,
+                  dr = Math.sqrt(dx*dx + dy*dy);
+
+                  if (dr < 2*node_radius + 2) {
+
+
+                    d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + x2 + "," + y2;
+                    
+                  } else {
+          
+                    d_path = "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + x2 + "," + y2;
+                    
+                  }
+
+            } else {
+
+              d_path = `M ${x1},${y1} 
+                   L ${x2},${y2}`;
+
+            }
+
+            return d_path;
           }
     
       function edge_class(d) {
@@ -269,7 +288,64 @@
         .enter().append("path")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)})
           .attr("class", edge_class)
-          .attr("stroke-width", function(d) {console.log(d.weight); return d.weight});
+          .attr("stroke-width", function(d) {
+              let this_layer = graph.nodes.filter(x => {return x.id == d.source})[0].L2;
+              let stroke_width;
+              if (this_layer === 2) {
+
+                stroke_width = edge_stroke_scale_g3(d.weight);
+                
+              } else {
+
+                stroke_width = edge_stroke_scale_g12(d.weight);
+                
+              }
+
+              return stroke_width});
+
+      // Update links to add arrows (function also adapted from https://stackoverflow.com/questions/52075326/d3-v4-add-arrows-to-force-directed-graph)
+      link.filter(d => edge_class(d) === "intra-layer")
+        .attr("d",edge_line_2)
+        .attr("marker-end", "url(#arrow)");
+
+      console.log(graph.nodes)
+
+      function edge_line_2(d) {
+
+
+
+        // length of current path
+        let pl = this.getTotalLength(),
+        // radius of circle plus marker head
+        r = node_radius + 2, //12 is the "size" of the marker Math.sqrt(12**2 + 12 **2)
+        // position close to where path intercepts circle	
+        m = this.getPointAtLength(pl - r);    
+        
+        // Get coordinates of nodes
+        const source_node = graph.nodes.filter(function(n){return n.id == d.source;})[0]
+        const target_node = graph.nodes.filter(function(n){return n.id == d.target;})[0]
+        const y1 = y_scale(project_y(source_node.x, source_node.y, source_node.z, d_project, y_0, tilt));
+        const x1 = x_scale(project_x(source_node.x, source_node.y, source_node.z, d_project, x_0, tilt));
+        const x2 = x_scale(project_x(target_node.x, target_node.y, target_node.z, d_project, x_0, tilt));
+
+
+        var dx = m.x - x1,
+            dy = m.y - y1,
+            dr = Math.sqrt(dx * dx + dy * dy);
+
+        if (dr < 2*node_radius + 2) {
+          console.log(d.source)
+          console.log(d.target)
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 1,0 " + m.x + "," + m.y;
+          
+        } else {
+
+          return "M" + x1 + "," + y1 + "A" + dr + "," + dr + " 0 0,1 " + m.x + "," + m.y;
+          
+        }
+
+
+      }
     
     
     
@@ -361,6 +437,9 @@
         // Recalculate edge postitions
         d3.selectAll(".intra-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});
+
+        d3.selectAll(".intra-layer")
+          .attr("d", edge_line_2);
     
         d3.selectAll(".inter-layer")
           .attr("d", function(d) {return edge_line(d,x_0, y_0, d_project, tilt)});

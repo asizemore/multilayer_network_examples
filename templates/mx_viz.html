@@ -6,7 +6,7 @@
     <style>{{ css_text }}</style>
 </head>
 
-<body style="background-color:rgb(1, 7, 9)"5>
+<body style="background-color:rgb(1, 7, 9)">
 
   <div id="header">
     <h1> Multilayer network </h1>
@@ -19,7 +19,13 @@
 
 
     <div id="svgdiv-mx">
-      <svg width="600" height="900" id="svg-mx"></svg>
+      <svg width="1000" height="900" id="svg-mx">
+        <defs>
+          <marker id="arrow" markerWidth="7" markerHeight="7" refX="2" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L3,3 z" fill="#fff" />
+          </marker>
+        </defs>
+      </svg>
     </div>
 
 
@@ -27,7 +33,7 @@
 
     <div id="svgdiv-sadj">
       <h2>supra-adjacency matrix</h2>
-      <svg width="500" height="500" id="svg-sadj"></svg>
+      <svg width="300" height="300" id="svg-sadj"></svg>
     </div>
 
   </div>
